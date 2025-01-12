@@ -11,6 +11,8 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rb;
     private Animator anim;
     private float horizontal;
+    public bool hit;
+    public Vector2Int mousePos;
 
     private void Start()
     {
@@ -35,6 +37,8 @@ public class PlayerController : MonoBehaviour
        horizontal = Input.GetAxis("Horizontal");
         float jump = Input.GetAxisRaw("Jump");
         float vertical = Input.GetAxisRaw("Vertical");
+        
+        hit= Input.GetMouseButton(0);
 
         Vector2 movement = new Vector2(horizontal * moveSpeed, rb.velocity.y);
        
@@ -52,7 +56,11 @@ public class PlayerController : MonoBehaviour
     }
     private void Update()
     {
-      anim.SetFloat("Horizontal", horizontal);
+        mousePos.x = Mathf.RoundToInt(Camera.main.ScreenToWorldPoint(Input.mousePosition).x);
+        mousePos.y = Mathf.RoundToInt(Camera.main.ScreenToWorldPoint(Input.mousePosition).y);
+
+        anim.SetFloat("Horizontal", horizontal);
+        anim.SetBool("hit", hit);
     }  
 
  }
