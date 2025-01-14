@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6179934967582029313}
   - component: {fileID: 389216462272217036}
   m_Layer: 0
-  m_Name: CopperRawBlock
+  m_Name: CopperOreRawBlock
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
