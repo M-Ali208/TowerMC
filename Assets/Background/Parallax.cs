@@ -1,25 +1,35 @@
 using UnityEngine;
+using UnityEngine.UIElements;
 public class Parallax : MonoBehaviour
 {
 
-    private float length, startPos;
+    private float lengthx, lengthy, startPosx, startPosy;
     public GameObject cam;
     public float parallaxEffect ;
 
     void Start()
     {
-        startPos = transform.position.x;
-        length = GetComponent<SpriteRenderer>().bounds.size.x;
+        startPosx = transform.position.x;
+        lengthx  = GetComponent<SpriteRenderer>().bounds.size.x;
+        startPosy = transform.position.y;
+        lengthy = GetComponent<SpriteRenderer>().bounds.size.y;
     }
 
     void FixedUpdate()
     {
-        float temp = (cam.transform.position.x * (1 - parallaxEffect));
-        float dist = (cam.transform.position.x * parallaxEffect);
-        transform.position = new Vector3(startPos + dist, transform.position.y, transform.position.z);
+        float tempx = (cam.transform.position.x * (1 - parallaxEffect));
+        float distx = (cam.transform.position.x * parallaxEffect);
+        float tempy = (cam.transform.position.y * (1 - parallaxEffect));
+        float disty = (cam.transform.position.y * parallaxEffect);
 
-        if (temp > startPos + length) startPos += length;
-        else if (temp < startPos - length) startPos -= length;
+        transform.position = new Vector3(startPosx + distx, transform.position.y, transform.position.z);
+        transform.position = new Vector3(startPosy + disty, transform.position.x, transform.position.z);
+
+        if (tempx > startPosx + lengthx) startPosx += lengthx;
+        else if (tempx < startPosx - lengthx) startPosx -= lengthx;
+
+        if (tempy > startPosy + lengthy) startPosy += lengthy;
+        else if (tempy < startPosy - lengthy) startPosy -= lengthy;
     }
 
 }
