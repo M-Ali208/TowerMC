@@ -9,6 +9,7 @@ public class CamController : MonoBehaviour
     public float smoothTime;
 
     public Transform playerTransform;
+    [SerializeField] float camOffsety;
 
 
     public void FixedUpdate()
@@ -16,7 +17,7 @@ public class CamController : MonoBehaviour
         Vector3 pos = GetComponent<Transform>().position;
 
         pos.x = Mathf.Lerp(pos.x, playerTransform.position.x, smoothTime);
-        pos.y = Mathf.Lerp(pos.y, playerTransform.position.y, smoothTime);
+        pos.y = Mathf.Lerp(pos.y, playerTransform.position.y + camOffsety, smoothTime);
         GetComponent<Transform>().position = pos;
 
     }
