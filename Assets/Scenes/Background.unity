@@ -251,7 +251,7 @@ GameObject:
   - component: {fileID: 287180178}
   - component: {fileID: 287180179}
   m_Layer: 0
-  m_Name: "ma\u011Fara fixed-2 (1)"
+  m_Name: "\xFCst sol su"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -420,7 +420,7 @@ GameObject:
   - component: {fileID: 352058070}
   - component: {fileID: 352058069}
   m_Layer: 0
-  m_Name: "ma\u011Fara fixed-1 (1)"
+  m_Name: "alt orta sark\u0131t"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -520,7 +520,7 @@ GameObject:
   - component: {fileID: 384619621}
   - component: {fileID: 384619622}
   m_Layer: 0
-  m_Name: "ma\u011Fara fixed-2 (2)"
+  m_Name: "alt sa\u011F su"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -605,7 +605,7 @@ GameObject:
   - component: {fileID: 385640823}
   - component: {fileID: 385640822}
   m_Layer: 0
-  m_Name: "ma\u011Fara fixed-0 (2)"
+  m_Name: "\xFCst orta arkaplan"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -705,7 +705,7 @@ GameObject:
   - component: {fileID: 450231987}
   - component: {fileID: 450231988}
   m_Layer: 0
-  m_Name: "ma\u011Fara fixed-1 (1)"
+  m_Name: "alt sol sark\u0131t"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -790,7 +790,7 @@ GameObject:
   - component: {fileID: 531117354}
   - component: {fileID: 531117353}
   m_Layer: 0
-  m_Name: "ma\u011Fara fixed-2 (1)"
+  m_Name: alt orta su
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1004,7 +1004,7 @@ Transform:
   m_GameObject: {fileID: 563349291}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.556733, y: 4.15, z: 0}
+  m_LocalPosition: {x: -3.556733, y: -6.6, z: 0}
   m_LocalScale: {x: 1000, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1255,7 +1255,7 @@ Transform:
   m_GameObject: {fileID: 623995131}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 6.69, z: 0}
+  m_LocalPosition: {x: 0, y: 13.9, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1361,7 +1361,7 @@ GameObject:
   - component: {fileID: 769176393}
   - component: {fileID: 769176394}
   m_Layer: 0
-  m_Name: "ma\u011Fara fixed-0 (1)"
+  m_Name: sol arkaplan
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1445,7 +1445,7 @@ GameObject:
   - component: {fileID: 823467434}
   - component: {fileID: 823467435}
   m_Layer: 0
-  m_Name: "ma\u011Fara fixed-2 (2)"
+  m_Name: "sa\u011F su "
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1530,7 +1530,7 @@ GameObject:
   - component: {fileID: 854879587}
   - component: {fileID: 854879586}
   m_Layer: 0
-  m_Name: "ma\u011Fara fixed-2"
+  m_Name: orta su
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1630,7 +1630,7 @@ GameObject:
   - component: {fileID: 943232876}
   - component: {fileID: 943232877}
   m_Layer: 0
-  m_Name: "ma\u011Fara fixed-1 (1)"
+  m_Name: "\xFCst sol sark\u0131t"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1882,7 +1882,7 @@ GameObject:
   - component: {fileID: 1120251170}
   - component: {fileID: 1120251171}
   m_Layer: 0
-  m_Name: "ma\u011Fara fixed-2 (2)"
+  m_Name: "\xFCst sa\u011F su"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1967,7 +1967,7 @@ GameObject:
   - component: {fileID: 1201681658}
   - component: {fileID: 1201681657}
   m_Layer: 0
-  m_Name: "ma\u011Fara fixed-0 (1)"
+  m_Name: alt orta arkaplan
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2067,7 +2067,7 @@ GameObject:
   - component: {fileID: 1243931751}
   - component: {fileID: 1243931752}
   m_Layer: 0
-  m_Name: "ma\u011Fara fixed-0 (2)"
+  m_Name: "alt sa\u011F arkaplan"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2235,7 +2235,7 @@ GameObject:
   - component: {fileID: 1291893843}
   - component: {fileID: 1291893844}
   m_Layer: 0
-  m_Name: "ma\u011Fara fixed-1 (1)"
+  m_Name: "sol sark\u0131t"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2319,7 +2319,7 @@ GameObject:
   - component: {fileID: 1309434486}
   - component: {fileID: 1309434487}
   m_Layer: 0
-  m_Name: "ma\u011Fara fixed-2 (1)"
+  m_Name: sol su
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2403,7 +2403,7 @@ GameObject:
   - component: {fileID: 1415645987}
   - component: {fileID: 1415645988}
   m_Layer: 0
-  m_Name: "ma\u011Fara fixed-1 (2)"
+  m_Name: "sa\u011F sark\u0131t"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2488,7 +2488,7 @@ GameObject:
   - component: {fileID: 1442688943}
   - component: {fileID: 1442688942}
   m_Layer: 0
-  m_Name: "ma\u011Fara fixed-2 (2)"
+  m_Name: "\xFCst orta su"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2588,7 +2588,7 @@ GameObject:
   - component: {fileID: 1467716609}
   - component: {fileID: 1467716610}
   m_Layer: 0
-  m_Name: "ma\u011Fara fixed-1 (2)"
+  m_Name: "\xFCst sa\u011F sark\u0131t"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2673,7 +2673,7 @@ GameObject:
   - component: {fileID: 1508589427}
   - component: {fileID: 1508589426}
   m_Layer: 0
-  m_Name: "ma\u011Fara fixed-1 (2)"
+  m_Name: "\xFCst orta sark\u0131t"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2774,7 +2774,7 @@ GameObject:
   - component: {fileID: 1622302800}
   - component: {fileID: 1622302799}
   m_Layer: 0
-  m_Name: "ma\u011Fara fixed-1"
+  m_Name: "orta sark\u0131t"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2874,7 +2874,7 @@ GameObject:
   - component: {fileID: 1632860975}
   - component: {fileID: 1632860976}
   m_Layer: 0
-  m_Name: "ma\u011Fara fixed-0 (2)"
+  m_Name: "\xFCst sa\u011F arkaplan"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2959,7 +2959,7 @@ GameObject:
   - component: {fileID: 1702000784}
   - component: {fileID: 1702000783}
   m_Layer: 0
-  m_Name: "ma\u011Fara fixed-0"
+  m_Name: orta arkaplan
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3059,7 +3059,7 @@ GameObject:
   - component: {fileID: 1778595985}
   - component: {fileID: 1778595986}
   m_Layer: 0
-  m_Name: "ma\u011Fara fixed-0 (1)"
+  m_Name: "\xFCst sol arkaplan"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3143,7 +3143,7 @@ GameObject:
   - component: {fileID: 1785354352}
   - component: {fileID: 1785354353}
   m_Layer: 0
-  m_Name: "ma\u011Fara fixed-1 (2)"
+  m_Name: "alt sa\u011F sark\u0131t"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3227,7 +3227,7 @@ GameObject:
   - component: {fileID: 1822181277}
   - component: {fileID: 1822181278}
   m_Layer: 0
-  m_Name: "ma\u011Fara fixed-2 (1)"
+  m_Name: alt sol su
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3311,7 +3311,7 @@ GameObject:
   - component: {fileID: 1899794007}
   - component: {fileID: 1899794008}
   m_Layer: 0
-  m_Name: "ma\u011Fara fixed-0 (2)"
+  m_Name: "sa\u011F arkaplan"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3395,7 +3395,7 @@ GameObject:
   - component: {fileID: 1916101742}
   - component: {fileID: 1916101743}
   m_Layer: 0
-  m_Name: "ma\u011Fara fixed-0 (1)"
+  m_Name: alt sol arkaplan
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
