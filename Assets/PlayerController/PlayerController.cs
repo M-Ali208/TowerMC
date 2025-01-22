@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    
     public float moveSpeed;
     public float jumpForce;
     public bool onGround;
@@ -11,14 +10,13 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rb;
     private Animator anim;
     private float horizontal;
-    public bool hit;
-    public Vector2Int mousePos;
+    private bool hit;
+    private bool jump;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
-
     }
 
     private void OnTriggerStay2D(Collider2D col)
@@ -26,6 +24,7 @@ public class PlayerController : MonoBehaviour
         if (col.CompareTag("Ground"))
             onGround = true;
     }
+
     private void OnTriggerExit2D(Collider2D col)
     {
         if (col.CompareTag("Ground"))
@@ -34,34 +33,37 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-       horizontal = Input.GetAxis("Horizontal");
-        float jump = Input.GetAxisRaw("Jump");
-        float vertical = Input.GetAxisRaw("Vertical");
-        
-        hit= Input.GetMouseButton(0);
+        horizontal = Input.GetAxis("Horizontal");
+        float jumpInput = Input.GetAxisRaw("Jump");
 
+    
         Vector2 movement = new Vector2(horizontal * moveSpeed, rb.velocity.y);
-       
-        if(horizontal > 0)
-            transform.localScale = new Vector3(-1, 1,1 );
-        else if (horizontal < 0)
-            transform.localScale = new Vector3(1, 1, 1);
 
-        if (vertical > 0.1f || jump > 0.1f)
+        if (horizontal > 0)
+            transform.localScale = new Vector3(-1, 1, 1); 
+        else if (horizontal < 0)
+            transform.localScale = new Vector3(1, 1, 1); 
+
+       
+        if (jumpInput > 0.1f && onGround)
         {
-            if (onGround)
             movement.y = jumpForce;
+            jump = true;
         }
+        else if (onGround)
+        {
+            jump = false;
+        }
+
         rb.velocity = movement;
     }
+
     private void Update()
     {
-        mousePos.x = Mathf.RoundToInt(Camera.main.ScreenToWorldPoint(Input.mousePosition).x);
-        mousePos.y = Mathf.RoundToInt(Camera.main.ScreenToWorldPoint(Input.mousePosition).y);
+        
+        anim.SetFloat("Horizontal", Mathf.Abs(horizontal)); 
+        anim.SetBool("hit", Input.GetMouseButton(0));
+        anim.SetBool("jump", jump);
+    }
+}
 
-        anim.SetFloat("Horizontal", horizontal);
-        anim.SetBool("hit", hit);
-    }  
-
- }
-    
