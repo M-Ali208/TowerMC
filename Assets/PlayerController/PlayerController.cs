@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -12,9 +11,11 @@ public class PlayerController : MonoBehaviour
     private Animator anim;
     private float horizontal;
     public bool hit;
-    public Vector2Int mousePos;
+
+    public Vector3Int mousePos;
     [SerializeField] private float groundCheckDistance = 0.3f;
     [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private LayerMask MouseLayer;
     [SerializeField] private Transform groundCheck;
     
 
@@ -28,6 +29,11 @@ public class PlayerController : MonoBehaviour
     private bool onGrounded()
     {
         return Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, groundLayer);
+        //groundchek player deðil playerýn altýndaki blockðun parentýnýn layerýna bakýlacak
+    }
+    private void mouseBlockCheck()
+    {
+        Physics.Raycast(mousePos,Vector3.back, 1,MouseLayer);
     }
 
     private void FixedUpdate()
@@ -35,8 +41,13 @@ public class PlayerController : MonoBehaviour
        horizontal = Input.GetAxis("Horizontal");
         float jump = Input.GetAxisRaw("Jump");
         float vertical = Input.GetAxisRaw("Vertical");
+
         
         hit= Input.GetMouseButton(0);
+        if (hit)
+        {
+            
+        }
 
         Vector2 movement = new Vector2(horizontal * moveSpeed, rb.velocity.y);
        
@@ -66,6 +77,8 @@ public class PlayerController : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawLine(groundCheck.position, groundCheck.position + Vector3.down * groundCheckDistance);
     }
+    //Debug.Log(gameObjectYouWantTheParentOf.transform.parent.name);
 
  }
     
+ 
