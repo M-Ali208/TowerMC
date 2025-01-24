@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    
     public float moveSpeed;
     public float jumpForce;
     //public bool onGround;
@@ -23,13 +22,12 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
-
     }
 
     private bool onGrounded()
     {
         return Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, groundLayer);
-        //groundchek player deðil playerýn altýndaki blockðun parentýnýn layerýna bakýlacak
+        //groundchek player deï¿½il playerï¿½n altï¿½ndaki blockï¿½un parentï¿½nï¿½n layerï¿½na bakï¿½lacak
     }
     private void mouseBlockCheck()
     {
@@ -49,26 +47,39 @@ public class PlayerController : MonoBehaviour
             
         }
 
+    
         Vector2 movement = new Vector2(horizontal * moveSpeed, rb.velocity.y);
-       
-        if(horizontal > 0)
-            transform.localScale = new Vector3(-1, 1,1 );
-        else if (horizontal < 0)
-            transform.localScale = new Vector3(1, 1, 1);
 
-        if (vertical > 0.1f || jump > 0.1f)
+        if (horizontal > 0)
+            transform.localScale = new Vector3(-1, 1, 1); 
+        else if (horizontal < 0)
+            transform.localScale = new Vector3(1, 1, 1); 
+
+       
+        if (jumpInput > 0.1f && onGround)
         {
             if (onGrounded())
             movement.y = jumpForce;
+            jump = true;
         }
+        else if (onGround)
+        {
+            jump = false;
+        }
+
         rb.velocity = movement;
 
         Debug.Log(Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, groundLayer));
     }
+
     private void Update()
     {
-        mousePos.x = Mathf.RoundToInt(Camera.main.ScreenToWorldPoint(Input.mousePosition).x);
-        mousePos.y = Mathf.RoundToInt(Camera.main.ScreenToWorldPoint(Input.mousePosition).y);
+        
+        anim.SetFloat("Horizontal", Mathf.Abs(horizontal)); 
+        anim.SetBool("hit", Input.GetMouseButton(0));
+        anim.SetBool("jump", jump);
+    }
+}
 
         anim.SetFloat("Horizontal", horizontal);
         anim.SetBool("hit", hit);
