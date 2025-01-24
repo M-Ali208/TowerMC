@@ -318,8 +318,8 @@ Transform:
   m_GameObject: {fileID: 132753678}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.1862232, y: 0.1862232, z: 0.1862232}
+  m_LocalPosition: {x: -1.4882107, y: -19.445444, z: -0.019515991}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1903379259}
@@ -330,7 +330,7 @@ Transform:
   - {fileID: 1168286832}
   - {fileID: 1860985322}
   - {fileID: 541710201}
-  m_Father: {fileID: 271862231}
+  m_Father: {fileID: 1127912354}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &132753680
 MonoBehaviour:
@@ -656,10 +656,7 @@ Transform:
   m_LocalScale: {x: 5.3699, y: 5.3699, z: 5.3699}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1024797425}
-  - {fileID: 1328646881}
-  - {fileID: 978695807}
-  - {fileID: 132753679}
+  - {fileID: 1127912354}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &537394066
@@ -1361,8 +1358,8 @@ Transform:
   m_GameObject: {fileID: 978695806}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.1862232, y: 0.1862232, z: 0.1862232}
+  m_LocalPosition: {x: -1.4882107, y: -19.445444, z: -0.019515991}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 208175015}
@@ -1373,7 +1370,7 @@ Transform:
   - {fileID: 1031442984}
   - {fileID: 843301706}
   - {fileID: 876830618}
-  m_Father: {fileID: 271862231}
+  m_Father: {fileID: 1127912354}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &978695808
 MonoBehaviour:
@@ -1468,8 +1465,8 @@ Transform:
   m_GameObject: {fileID: 1024797424}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.1862232, y: 0.1862232, z: 0.1862232}
+  m_LocalPosition: {x: -1.4882107, y: -19.445444, z: -0.019515991}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1582237408}
@@ -1480,7 +1477,7 @@ Transform:
   - {fileID: 1165047342}
   - {fileID: 1298683279}
   - {fileID: 1387069219}
-  m_Father: {fileID: 271862231}
+  m_Father: {fileID: 1127912354}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1024797426
 MonoBehaviour:
@@ -1632,6 +1629,41 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &1127912353
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1127912354}
+  m_Layer: 0
+  m_Name: Nether
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1127912354
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1127912353}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.27713934, y: 3.6211927, z: 0.0036343301}
+  m_LocalScale: {x: 0.1862232, y: 0.1862232, z: 0.1862232}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1024797425}
+  - {fileID: 1328646881}
+  - {fileID: 978695807}
+  - {fileID: 132753679}
+  m_Father: {fileID: 271862231}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1165047341
 GameObject:
   m_ObjectHideFlags: 0
@@ -2079,8 +2111,8 @@ Transform:
   m_GameObject: {fileID: 1328646880}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.1862232, y: 0.1862232, z: 0.1862232}
+  m_LocalPosition: {x: -1.4882107, y: -19.445444, z: -0.019515991}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 826957433}
@@ -2091,7 +2123,7 @@ Transform:
   - {fileID: 95431192}
   - {fileID: 570514944}
   - {fileID: 571443997}
-  m_Father: {fileID: 271862231}
+  m_Father: {fileID: 1127912354}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1328646882
 MonoBehaviour:
