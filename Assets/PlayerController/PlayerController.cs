@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-
+    
     public float moveSpeed;
     public float jumpForce;
     //public bool onGround;
@@ -17,7 +17,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private LayerMask MouseLayer;
     [SerializeField] private Transform groundCheck;
-
+    
 
     private void Start()
     {
@@ -29,37 +29,37 @@ public class PlayerController : MonoBehaviour
     private bool onGrounded()
     {
         return Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, groundLayer);
-        //groundchek player deÄŸil playerÄ±n altÄ±ndaki blockÄŸun parentÄ±nÄ±n layerÄ±na bakÄ±lacak
+        //groundchek player deðil playerýn altýndaki blockðun parentýnýn layerýna bakýlacak
     }
     private void mouseBlockCheck()
     {
-        Physics.Raycast(mousePos, Vector3.back, 1, MouseLayer);
+        Physics.Raycast(mousePos,Vector3.back, 1,MouseLayer);
     }
 
     private void FixedUpdate()
     {
-        horizontal = Input.GetAxis("Horizontal");
+       horizontal = Input.GetAxis("Horizontal");
         float jump = Input.GetAxisRaw("Jump");
         float vertical = Input.GetAxisRaw("Vertical");
 
-
-        hit = Input.GetMouseButton(0);
+        
+        hit= Input.GetMouseButton(0);
         if (hit)
         {
-
+            
         }
 
         Vector2 movement = new Vector2(horizontal * moveSpeed, rb.velocity.y);
-
-        if (horizontal > 0)
-            transform.localScale = new Vector3(-1, 1, 1);
+       
+        if(horizontal > 0)
+            transform.localScale = new Vector3(-1, 1,1 );
         else if (horizontal < 0)
             transform.localScale = new Vector3(1, 1, 1);
 
         if (vertical > 0.1f || jump > 0.1f)
         {
             if (onGrounded())
-                movement.y = jumpForce;
+            movement.y = jumpForce;
         }
         rb.velocity = movement;
 
@@ -72,15 +72,13 @@ public class PlayerController : MonoBehaviour
 
         anim.SetFloat("Horizontal", horizontal);
         anim.SetBool("hit", hit);
-    }
-    private void OnDrawGizmos()
-    {
+    }  
+    private void OnDrawGizmos() {
         Gizmos.color = Color.red;
         Gizmos.DrawLine(groundCheck.position, groundCheck.position + Vector3.down * groundCheckDistance);
     }
     //Debug.Log(gameObjectYouWantTheParentOf.transform.parent.name);
 
-}
-
-
-
+ }
+    
+ 
