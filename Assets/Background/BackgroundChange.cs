@@ -5,7 +5,7 @@ using UnityEngine;
 public class BackgroundChange : MonoBehaviour
 {
     private SpriteRenderer sr;
-    private float duration = 1f;
+    [SerializeField] private float duration = 5f;
     [SerializeField] private GameObject End;
     [SerializeField] private GameObject Surface;
     [SerializeField] private GameObject Underground;
