@@ -1,8 +1,9 @@
-using UnityEngine;
 
+using System.Collections;
+using UnityEngine;
+using UnityEngine.Tilemaps;
 public class PlayerController : MonoBehaviour
 {
-    
     public float moveSpeed;
     public float jumpForce;
     //public bool onGround;
@@ -12,7 +13,7 @@ public class PlayerController : MonoBehaviour
     private float horizontal;
     public bool hit;
 
-    public Vector3Int mousePos;
+    public Vector2Int mousePos;
     [SerializeField] private float groundCheckDistance = 0.3f;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private LayerMask MouseLayer;
@@ -29,11 +30,18 @@ public class PlayerController : MonoBehaviour
     private bool onGrounded()
     {
         return Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, groundLayer);
-        //groundchek player deðil playerýn altýndaki blockðun parentýnýn layerýna bakýlacak
     }
     private void mouseBlockCheck()
     {
-        Physics.Raycast(mousePos,Vector3.back, 1,MouseLayer);
+        Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+        if (Physics.Raycast(mouseRay, out hit))
+        {
+          
+        }
+
+
     }
 
     private void FixedUpdate()
@@ -63,7 +71,8 @@ public class PlayerController : MonoBehaviour
         }
         rb.velocity = movement;
 
-        Debug.Log(Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, groundLayer));
+        //Debug.Log(Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, groundLayer));
+        Debug.Log(Physics2D.Raycast(mousePos, Vector2.down, 100f, MouseLayer));
     }
     private void Update()
     {
