@@ -6,7 +6,6 @@ public class PlayerController : MonoBehaviour
 {
     public float moveSpeed;
     public float jumpForce;
-    //public bool onGround;
 
     private Rigidbody2D rb;
     private Animator anim;
@@ -17,77 +16,163 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float groundCheckDistance = 0.3f;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private LayerMask MouseLayer;
+    [SerializeField] private LayerMask BackMainFrontLayer;
     [SerializeField] private Transform groundCheck;
-    
+
+    [SerializeField] private GameObject mouseBox;
+    [SerializeField] private float gridSize = 1.0f;
+    [SerializeField] private Vector2 gridOffset = new Vector2(0.5f, 0.5f);
+
+    public enum LayerMaskMode
+    {
+        BackPlane,
+        Main,
+        FrontPlane
+    }
+
+    private LayerMaskMode currentLayerMaskMode = LayerMaskMode.Main;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
-
     }
 
     private bool onGrounded()
     {
         return Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, groundLayer);
     }
-    private void mouseBlockCheck()
+
+private void mouseBlockCheck()
+{
+    Vector2 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+    RaycastHit2D[] hits = Physics2D.RaycastAll(mouseWorldPosition, Vector2.zero, Mathf.Infinity, BackMainFrontLayer);
+
+    foreach (RaycastHit2D hit in hits)
     {
-        Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
+        GameObject hitObject = hit.collider.gameObject;
+        Debug.Log("Hit object name: " + hitObject.name);
+        Debug.Log("Hit object transform: " + hitObject.transform.position);
+        Debug.Log("Hit object layer: " + LayerMask.LayerToName(hitObject.layer));
 
-        if (Physics.Raycast(mouseRay, out hit))
+        if (hitObject.transform.parent != null)
         {
-          
+            Debug.Log("Parent object name: " + hitObject.transform.parent.name);
         }
+    }
+}
+    private void BlockBreake()
+    {
+        Vector2 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        RaycastHit2D[] hits = Physics2D.RaycastAll(mouseWorldPosition, Vector2.zero, Mathf.Infinity, MouseLayer);
+        
+        foreach (RaycastHit2D hit in hits)
+        {
+            GameObject hitObject = hit.collider.gameObject;
+            Destroy(hitObject);
+            if (hitObject.transform.parent != null)
+            {
+                
+            }
+        }
+    }
+    private void BlockPlace()
+    {
+        Vector2 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        RaycastHit2D[] hits = Physics2D.RaycastAll(mouseWorldPosition, Vector2.zero, Mathf.Infinity, MouseLayer);
+        foreach (RaycastHit2D hit in hits)
+        {
+            GameObject hitObject = hit.collider.gameObject;
+            //Destroy(hitObject);
+            if (hitObject.transform.parent != null)
+            {
 
-
+            }
+        }
+    }
+    private void ChangeLayerMaskMode()
+    {
+        switch (currentLayerMaskMode)
+        {
+            case LayerMaskMode.BackPlane:
+                currentLayerMaskMode = LayerMaskMode.Main;
+                MouseLayer = LayerMask.GetMask("Main");
+                break;
+            case LayerMaskMode.Main:
+                currentLayerMaskMode = LayerMaskMode.FrontPlane;
+                MouseLayer = LayerMask.GetMask("FrontPlane");
+                break;
+            case LayerMaskMode.FrontPlane:
+                currentLayerMaskMode = LayerMaskMode.BackPlane;
+                MouseLayer = LayerMask.GetMask("BackPlane");
+                break;
+        }
+        Debug.Log("Current LayerMask Mode: " + currentLayerMaskMode);
     }
 
     private void FixedUpdate()
     {
-       horizontal = Input.GetAxis("Horizontal");
+        horizontal = Input.GetAxis("Horizontal");
         float jump = Input.GetAxisRaw("Jump");
         float vertical = Input.GetAxisRaw("Vertical");
 
-        
-        hit= Input.GetMouseButton(0);
-        if (hit)
-        {
-            
-        }
+        hit = Input.GetMouseButton(0);
 
         Vector2 movement = new Vector2(horizontal * moveSpeed, rb.velocity.y);
-       
-        if(horizontal > 0)
-            transform.localScale = new Vector3(-1, 1,1 );
+
+        if (horizontal > 0)
+            transform.localScale = new Vector3(-1, 1, 1);
         else if (horizontal < 0)
             transform.localScale = new Vector3(1, 1, 1);
 
-        if (vertical > 0.1f || jump > 0.1f)
+        if ((vertical > 0.1f || jump > 0.1f) && onGrounded())
         {
-            if (onGrounded())
             movement.y = jumpForce;
         }
-        rb.velocity = movement;
 
-        //Debug.Log(Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, groundLayer));
-        Debug.Log(Physics2D.Raycast(mousePos, Vector2.down, 100f, MouseLayer));
+        rb.velocity = movement;
     }
+
     private void Update()
     {
-        mousePos.x = Mathf.RoundToInt(Camera.main.ScreenToWorldPoint(Input.mousePosition).x);
-        mousePos.y = Mathf.RoundToInt(Camera.main.ScreenToWorldPoint(Input.mousePosition).y);
-
+        UpdateMouseBox(); 
         anim.SetFloat("Horizontal", horizontal);
         anim.SetBool("hit", hit);
-    }  
-    private void OnDrawGizmos() {
-        Gizmos.color = Color.red;
-        Gizmos.DrawLine(groundCheck.position, groundCheck.position + Vector3.down * groundCheckDistance);
-    }
-    //Debug.Log(gameObjectYouWantTheParentOf.transform.parent.name);
 
- }
+        if (Input.GetMouseButton(0) && !Input.GetMouseButtonUp(0))
+        {
+            //mouseBlockCheck();
+            BlockBreake();
+        }
+
+        if (Input.GetMouseButton(1) && !Input.GetMouseButtonUp(1))
+        {
+            //mouseBlockCheck();
+            BlockPlace();
+        }
+
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            ChangeLayerMaskMode();
+        }
+
+
+    }
+
+    private void UpdateMouseBox()
+    {
+        if (Camera.main != null)
+        {
+            Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            mouseWorldPosition.z = 0; // Z konumunu 0 yap
+
+            
+            mouseWorldPosition.x = Mathf.Round((mouseWorldPosition.x - gridOffset.x) / gridSize) * gridSize + gridOffset.x;
+            mouseWorldPosition.y = Mathf.Round((mouseWorldPosition.y - gridOffset.y) / gridSize) * gridSize + gridOffset.y;
+            mouseWorldPosition.z = -0.5f;
+            mouseBox.transform.position = mouseWorldPosition;
+        }
+    }
+}
     
  
