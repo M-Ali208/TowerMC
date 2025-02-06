@@ -14,7 +14,6 @@ public class Inventor
 
 public class Inventory : MonoBehaviour
 {
-    public Rigidbody2D rb;
     public List<Inventor> inventors;
     public GameObject blockHand;
     public GameObject toolHand;

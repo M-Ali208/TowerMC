@@ -87,8 +87,10 @@ public class PlayerController : MonoBehaviour
         foreach (RaycastHit2D hit in hits)
         {
             GameObject hitObject = hit.collider.gameObject;
-            BlockSO blockData = hitObject.GetComponent<BlockSO>();
-            if (blockData != null)
+            //BlockSO blockData = hitObject.GetComponent<BlockSO>();
+            GetComponent<Inventory>().AddItem(hitObject.name);
+            Destroy(hitObject);
+           /* if (blockData != null)
             {
                 float breakSpeedMultiplier = 1.0f;
 
@@ -113,14 +115,16 @@ public class PlayerController : MonoBehaviour
                 }
 
                 float breakTime = blockData.Hardness / (defaultBreakSpeed * breakSpeedMultiplier);
+                
                 StartCoroutine(BreakBlock(hitObject, breakTime));
-            }
+            }*/
         }
     }
 
     private IEnumerator BreakBlock(GameObject block, float breakTime)
     {
         yield return new WaitForSeconds(breakTime);
+        GetComponent<Inventory>().AddItem(block.name);
         Destroy(block);
     }
 
