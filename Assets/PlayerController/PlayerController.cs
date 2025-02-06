@@ -23,6 +23,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float gridSize = 1.0f;
     [SerializeField] private Vector2 gridOffset = new Vector2(0.5f, 0.5f);
 
+    private Inventory inventory;
+
     public enum LayerMaskMode
     {
         BackPlane,
@@ -36,6 +38,7 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+        inventory = GetComponent<Inventory>();
     }
 
     private bool onGrounded()
@@ -69,6 +72,7 @@ private void mouseBlockCheck()
         foreach (RaycastHit2D hit in hits)
         {
             GameObject hitObject = hit.collider.gameObject;
+            inventory.AddItem(hitObject.name);
             Destroy(hitObject);
             if (hitObject.transform.parent != null)
             {
