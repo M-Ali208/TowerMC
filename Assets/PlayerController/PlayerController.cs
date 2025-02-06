@@ -28,6 +28,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float gridSize = 1.0f;
     [SerializeField] private Vector2 gridOffset = new Vector2(0.5f, 0.5f);
 
+    private Inventory inventory;
+
     public enum LayerMaskMode
     {
         BackPlane,
@@ -35,7 +37,7 @@ public class PlayerController : MonoBehaviour
         FrontPlane
     }
 
-    // Oyuncunun elindeki aracý ve aracýn malzeme seviyesini temsil eden deðiþkenler
+    // Oyuncunun elindeki aracï¿½ ve aracï¿½n malzeme seviyesini temsil eden deï¿½iï¿½kenler
     public ToolType currentToolType;
     public ToolMaterial currentToolMaterial;
     public float defaultBreakSpeed = 1.0f;
@@ -44,6 +46,7 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+        inventory = GetComponent<Inventory>();
     }
 
     private bool onGrounded()
@@ -89,7 +92,7 @@ public class PlayerController : MonoBehaviour
             {
                 float breakSpeedMultiplier = 1.0f;
 
-                // Eðer oyuncunun elindeki araç bloðun BestToolType'ý ile ayný ise
+                // Eï¿½er oyuncunun elindeki araï¿½ bloï¿½un BestToolType'ï¿½ ile aynï¿½ ise
                 if (currentToolType == blockData.BestToolType)
                 {
                     breakSpeedMultiplier = ToolMaterialBreakSpeed.BreakSpeed[blockData.ToolBreakSpeed];
@@ -99,7 +102,7 @@ public class PlayerController : MonoBehaviour
                 {
                     breakSpeedMultiplier *= 1f;
                 }
-                // Eðer oyuncunun elindeki aracýn malzeme seviyesi bloðun MinHarvestToolTier'i ile ayný ise
+                // Eï¿½er oyuncunun elindeki aracï¿½n malzeme seviyesi bloï¿½un MinHarvestToolTier'i ile aynï¿½ ise
                 if (currentToolMaterial == blockData.MinHarvestToolTier)
                 {
                     blockData.Hardness *= 1.5f;
