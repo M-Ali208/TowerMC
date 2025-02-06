@@ -8,7 +8,6 @@ public class RequireItems
 {
     public string itemName;
     public int count;
-    public bool isAvailable;
 }
 
 [Serializable]
@@ -28,31 +27,24 @@ public class CraftManager : MonoBehaviour
         playerInventory = GameObject.FindGameObjectWithTag("Player").GetComponent<Inventory>();
     }
 
-    private void Update() {
-        Craftables();
-    }
-
     public void Craftables()
     {
-        
-
-        for (int x = 0; x < craftLists.Capacity; x++)
+        for (int x = 0; x < craftLists.Count; x++)
         { 
-            for (int i = 0; i < playerInventory.inventors.Capacity; i++)
+            bool[] tempBool = new bool[craftLists[x].requireItems.Count];
+            for (int i = 0; i < playerInventory.inventors.Count; i++)
             {
-               
-                foreach (var item in craftLists[x].requireItems)
-                {
-                    if (playerInventory.inventors[i].blockName == item.itemName)
+               for (int y = 0; y < craftLists[x].requireItems.Count; y++)
+               {
+                    if (playerInventory.inventors[i].blockName == craftLists[x].requireItems[y].itemName && playerInventory.inventors[i].count >= craftLists[x].requireItems[y].count)
                     {
-                        item.isAvailable = true;
+                        tempBool[y] = true;
                     }
-                }
-
-                /*if (playerInventory.inventors[i].blockName == craftLists[x].requireItems[y].itemName && playerInventory.inventors[i].count >= craftLists[x].requireItems[y].count)
+               }
+                if (Array.TrueForAll(tempBool, deger => deger))
                 {
                     craftLists[x].isCraftable = true;
-                }*/
+                }
                
             }
         }
