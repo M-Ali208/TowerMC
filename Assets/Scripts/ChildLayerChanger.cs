@@ -3,39 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ChildLayerChanger : MonoBehaviour
-/*
-  {
-    [SerializeField] private GameObject parent;
-    [SerializeField] private LayerMask targetLayerMask;
-
-    private int previousChildCount = 0;
-
-    void Start()
-    {
-        SetChildLayers();
-        previousChildCount = parent.transform.childCount;
-    }
-
-    void Update()
-    {
-        // Check if the number of children has changed
-        if (parent.transform.childCount != previousChildCount)
-        {
-            SetChildLayers();
-            previousChildCount = parent.transform.childCount;
-        }
-    }
-
-    private void SetChildLayers()
-    {
-        int targetLayer = Mathf.RoundToInt(Mathf.Log(targetLayerMask.value, 2));
-        foreach (Transform child in parent.transform)
-        {
-            child.gameObject.layer = targetLayer;
-        }
-    }
-}
-*/
 {
     [SerializeField] private GameObject parent;
     [SerializeField] private LayerMask targetLayerMask;
@@ -46,27 +13,42 @@ public class ChildLayerChanger : MonoBehaviour
     void Start()
     {
         targetLayer = GetLayerFromMask(targetLayerMask);
-        SetChildLayers();
+        SetChildProperties();
         previousChildCount = parent.transform.childCount;
     }
 
     void Update()
     {
-        // Check if the number of children has changed
+        // Eðer child sayýsý deðiþmiþse güncelle
         if (parent.transform.childCount != previousChildCount)
         {
-            SetChildLayers();
+            SetChildProperties();
             previousChildCount = parent.transform.childCount;
         }
     }
 
-    private void SetChildLayers()
+    private void SetChildProperties()
     {
         foreach (Transform child in parent.transform)
         {
+            // Layer'ý güncelle
             if (child.gameObject.layer != targetLayer)
             {
                 child.gameObject.layer = targetLayer;
+            }
+
+            // BoxCollider2D kontrol et ve isTrigger ayarla
+            BoxCollider2D boxCollider = child.GetComponent<BoxCollider2D>();
+            if (boxCollider != null)
+            {
+                if (parent.name == "BackPlane" || parent.name == "FrontPlane")
+                {
+                    boxCollider.isTrigger = true;
+                }
+                else if (parent.name == "Main")
+                {
+                    boxCollider.isTrigger = false;
+                }
             }
         }
     }

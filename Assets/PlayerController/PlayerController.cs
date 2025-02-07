@@ -14,11 +14,16 @@ public class PlayerController : MonoBehaviour
     public bool hit;
     public bool hardnessMultiplierApplied = false;
 
+    private float currentBreakTime = 0f;
+    private bool isBreaking = false;
+    private GameObject breakingBlock;
+    private float breakDuration;
+   
     private BlockSO blockSO;
     [SerializeField] GameObject blockToPlace;
 
-    private LayerMaskMode currentLayerMaskMode = LayerMaskMode.Main;
-    private BlockPlaceParentMode currentBlockPlaceParentMode = BlockPlaceParentMode.Main;
+    public LayerMaskMode currentLayerMaskMode = LayerMaskMode.Main;
+    public BlockPlaceParentMode currentBlockPlaceParentMode = BlockPlaceParentMode.Main;
 
     public Vector2Int mousePos;
     [SerializeField] private float groundCheckDistance = 0.3f;
@@ -57,7 +62,20 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         inventory = GetComponent<Inventory>();
+
+        if (anim == null)
+            Debug.LogError("Animator component is missing on PlayerController!");
+
+        if (inventory == null)
+            Debug.LogError("Inventory component is missing on PlayerController!");
+
+        if (BlockPlaceParent == null)
+        {
+            BlockPlaceParent = GameObject.Find("Main"); // Varsayılan olarak "Main" isimli GameObject'i ata
+ 
+        }
     }
+
 
     private bool onGrounded()
     {
@@ -102,19 +120,15 @@ public class PlayerController : MonoBehaviour
             if (blockData != null)
             {
                 float breakSpeedMultiplier = 1.0f;
-                float CurrentBlockHardness = blockData.Hardness; // If bloğunun dışına taşındı
-                 // Her blok için ayrı değişken
-                //float previousBlockHardness = 0.0f;
-                // Eğer oyuncunun elindeki araç bloğun BestToolType'ı ile aynı ise
+                float CurrentBlockHardness = blockData.Hardness;
+
                 if (currentToolType == blockData.BestToolType)
                 {
                     breakSpeedMultiplier = ToolMaterialBreakSpeed.BreakSpeed[blockData.ToolBreakSpeed];
                 }
 
-                // Eğer hardnessMultiplier daha önce uygulanmadıysa
                 if (!hardnessMultiplierApplied)
                 {
-                    // Eğer oyuncunun elindeki aracın malzeme seviyesi bloğun MinHarvestToolTier'i ile aynı ise
                     if (currentToolMaterial == blockData.MinHarvestToolTier)
                     {
                         CurrentBlockHardness *= 1.5f;
@@ -124,35 +138,39 @@ public class PlayerController : MonoBehaviour
                         CurrentBlockHardness *= 5.0f;
                     }
                     hardnessMultiplierApplied = true;
-                    Debug.Log("Current Block Hardness: " + CurrentBlockHardness);
                 }
 
-                float breakTime = CurrentBlockHardness / (defaultBreakSpeed * breakSpeedMultiplier);
-                StartCoroutine(BreakBlock(hitObject, breakTime));
+                breakDuration = CurrentBlockHardness / (defaultBreakSpeed * breakSpeedMultiplier);
+
+                if (breakingBlock != hitObject)
+                {
+                    breakingBlock = hitObject;
+                    currentBreakTime = 0f; // Yeni bloğa geçtiyse süre sıfırlansın
+                }
+
+                isBreaking = true;
+                return;
             }
         }
-    }
 
-    private IEnumerator BreakBlock(GameObject block, float breakTime)
-    {
-        yield return new WaitForSeconds(breakTime);
-        hardnessMultiplierApplied = false;
-        GetComponent<Inventory>().AddItem(block.name);
-        Destroy(block);
+        isBreaking = false;
+        breakingBlock = null;
     }
 
 
     private void BlockPlace()
+        
     {
         Vector2 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         RaycastHit2D[] hits = Physics2D.RaycastAll(mouseWorldPosition, Vector2.zero, Mathf.Infinity, MouseLayer);
 
         bool canPlaceBlock = true;
+        bool canPlaceBlockMain = true;
 
         foreach (RaycastHit2D hit in hits)
         {
             GameObject hitObject = hit.collider.gameObject;
-            BlockSO blockData = hitObject.GetComponent<Blocks>().blockSO;
+            BlockSO blockData = hitObject.GetComponent<Blocks>()?.blockSO;
             if (blockData != null)
             {
                 canPlaceBlock = false;
@@ -160,33 +178,56 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (canPlaceBlock)
-        {
-            // Elindeki bloktan bir blok al
-            //GameObject blockToPlace = inventory.GetBlockFromHand();
+        Vector3 playerPosition = transform.position;
+        playerPosition.x = Mathf.Round((playerPosition.x - gridOffset.x) / gridSize) * gridSize + gridOffset.x;
+        playerPosition.y = Mathf.Round((playerPosition.y - gridOffset.y) / gridSize) * gridSize + gridOffset.y;
 
+        Vector3 blockPosition = new Vector3(
+            Mathf.Round((mouseWorldPosition.x - gridOffset.x) / gridSize) * gridSize + gridOffset.x,
+            Mathf.Round((mouseWorldPosition.y - gridOffset.y) / gridSize) * gridSize + gridOffset.y,
+            BlockPlaceParent.transform.position.z
+        );
+
+        if (playerPosition.x == blockPosition.x && 
+            (playerPosition.y == blockPosition.y || playerPosition.y + 1 == blockPosition.y) && BlockPlaceParent.name == "Main")
+        {
+            Debug.Log("Cannot place block: Player is in the way!");
+            canPlaceBlockMain = false;
+        }
+
+
+        if (canPlaceBlock && canPlaceBlockMain)
+        {
             if (blockToPlace != null)
             {
-                BlockSO blockSO = blockToPlace.GetComponent<Blocks>().blockSO;
+                BlockSO blockSO = blockToPlace.GetComponent<Blocks>()?.blockSO;
                 if (blockSO != null && blockSO.IsPlaceable)
                 {
-                    // Blok yerleştirme pozisyonunu ayarla
-                    mouseWorldPosition.x = Mathf.Round((mouseWorldPosition.x - gridOffset.x) / gridSize) * gridSize + gridOffset.x;
-                    mouseWorldPosition.y = Mathf.Round((mouseWorldPosition.y - gridOffset.y) / gridSize) * gridSize + gridOffset.y;
+                    Vector3 NewBlockPosition = Vector3.zero;
+
+                    // Blok yerleştirme pozisyonunu ızgaraya hizala
+                    NewBlockPosition.x = Mathf.Round((mouseWorldPosition.x - gridOffset.x) / gridSize) * gridSize + gridOffset.x;
+                    NewBlockPosition.y = Mathf.Round((mouseWorldPosition.y - gridOffset.y) / gridSize) * gridSize + gridOffset.y;
+                    NewBlockPosition.z = BlockPlaceParent.transform.position.z;
+                    
 
                     // Yeni bloğu oluştur ve pozisyonunu ayarla
-                    GameObject newBlock = Instantiate(blockToPlace, mouseWorldPosition, Quaternion.identity);
+                    GameObject newBlock = Instantiate(blockToPlace, NewBlockPosition, Quaternion.identity);
                     newBlock.GetComponent<Blocks>().blockSO.IsPlaceable = true;
 
                     // Bloğu BlockPlaceParent nesnesinin altına yerleştir
                     newBlock.transform.SetParent(BlockPlaceParent.transform);
 
-                    // Elindeki bloktan bloğu çıkar
-                    //inventory.RemoveItemFromHand(blockToPlace.name);
+                    Debug.Log("Block placed successfully at: " + NewBlockPosition);
                 }
             }
         }
+        else
+        {
+            Debug.Log("Block placement failed!");
+        }
     }
+
 
     private void ChangeLayerMaskMode()
     {
@@ -248,6 +289,7 @@ public class PlayerController : MonoBehaviour
 
         rb.velocity = movement;
     }
+    
 
     private void FixedUpdate()
     {
@@ -263,10 +305,35 @@ public class PlayerController : MonoBehaviour
         anim.SetFloat("Horizontal", horizontal);
         anim.SetBool("hit", hit);
 
-        if (Input.GetMouseButton(0) && !Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButton(0))
         {
-            //mouseBlockCheck();
             BlockBreake();
+        }
+        else
+        {
+            isBreaking = false;
+            breakingBlock = null;
+            currentBreakTime = 0f; // Tuş bırakıldığında süre sıfırlansın
+        }
+
+        if (isBreaking && breakingBlock != null)
+        {
+            currentBreakTime += 2 * Time.deltaTime;
+            //Debug.Log("Current Break Time: " + currentBreakTime);
+            if (currentBreakTime >= breakDuration)
+            {
+                GetComponent<Inventory>().AddItem(breakingBlock.name);
+                Destroy(breakingBlock);
+                isBreaking = false;
+                breakingBlock = null;
+                hardnessMultiplierApplied = false;
+                Inventory inventory = GetComponent<Inventory>();
+
+
+            }
+            
+            
+            
         }
 
         if (Input.GetMouseButton(1) && !Input.GetMouseButtonUp(1))
@@ -280,6 +347,7 @@ public class PlayerController : MonoBehaviour
             ChangeLayerMaskMode();
             ChangeBlockPlaceParentMode();
         }
+
     }
 
     private void UpdateMouseBox()
@@ -294,103 +362,5 @@ public class PlayerController : MonoBehaviour
             mouseWorldPosition.z = -0.5f;
             mouseBox.transform.position = mouseWorldPosition;
         }
-    }
-}
-
-/*
- private float currentBreakTime = 0f;
-private bool isBreaking = false;
-private GameObject breakingBlock;
-private float breakDuration;
-
-private void BlockBreake()
-{
-    Vector2 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-    RaycastHit2D[] hits = Physics2D.RaycastAll(mouseWorldPosition, Vector2.zero, Mathf.Infinity, MouseLayer);
-
-    foreach (RaycastHit2D hit in hits)
-    {
-        GameObject hitObject = hit.collider.gameObject;
-        BlockSO blockData = hitObject.GetComponent<Blocks>().blockSO;
-
-        if (blockData != null)
-        {
-            float breakSpeedMultiplier = 1.0f;
-            float CurrentBlockHardness = blockData.Hardness;
-
-            if (currentToolType == blockData.BestToolType)
-            {
-                breakSpeedMultiplier = ToolMaterialBreakSpeed.BreakSpeed[blockData.ToolBreakSpeed];
-            }
-
-            if (!hardnessMultiplierApplied)
-            {
-                if (currentToolMaterial == blockData.MinHarvestToolTier)
-                {
-                    CurrentBlockHardness *= 1.5f;
-                }
-                else
-                {
-                    CurrentBlockHardness *= 5.0f;
-                }
-                hardnessMultiplierApplied = true;
-            }
-
-            breakDuration = CurrentBlockHardness / (defaultBreakSpeed * breakSpeedMultiplier);
-
-            if (breakingBlock != hitObject)
-            {
-                breakingBlock = hitObject;
-                currentBreakTime = 0f; // Yeni bloğa geçtiyse süre sıfırlansın
-            }
-
-            isBreaking = true;
-            return;
-        }
-    }
-
-    isBreaking = false;
-    breakingBlock = null;
-}
-
-private void Update()
-{
-    UpdateMouseBox();
-    anim.SetFloat("Horizontal", horizontal);
-    anim.SetBool("hit", hit);
-
-    if (Input.GetMouseButton(0))
-    {
-        BlockBreake();
-    }
-    else
-    {
-        isBreaking = false;
-        breakingBlock = null;
-        currentBreakTime = 0f; // Tuş bırakıldığında süre sıfırlansın
-    }
-
-    if (isBreaking && breakingBlock != null)
-    {
-        currentBreakTime += Time.deltaTime;
-        if (currentBreakTime >= breakDuration)
-        {
-            GetComponent<Inventory>().AddItem(breakingBlock.name);
-            Destroy(breakingBlock);
-            isBreaking = false;
-            breakingBlock = null;
-            hardnessMultiplierApplied = false;
-        }
-    }
-
-    if (Input.GetMouseButton(1))
-    {
-        BlockPlace();
-    }
-
-    if (Input.GetKeyDown(KeyCode.T))
-    {
-        ChangeLayerMaskMode();
-        ChangeBlockPlaceParentMode();
     }
 }
