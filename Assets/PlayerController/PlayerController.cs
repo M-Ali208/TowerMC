@@ -81,6 +81,7 @@ public class PlayerController : MonoBehaviour
 
     private void BlockBreake()
     {
+        Debug.Log(Camera.main);
         Vector2 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         RaycastHit2D[] hits = Physics2D.RaycastAll(mouseWorldPosition, Vector2.zero, Mathf.Infinity, MouseLayer);
 
