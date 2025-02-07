@@ -14,6 +14,7 @@ public class BlockSO : ScriptableObject
     public AudioClip BreakSound;
     public AudioClip PlaceSound;
     public AudioClip WalkingSound;
+    public GameObject BlockToPlace;
     //lootTable
 
 }
