@@ -435,6 +435,8 @@ GameObject:
   - component: {fileID: 3518937276206872159}
   - component: {fileID: 7494347839193966711}
   - component: {fileID: 3756626907326096017}
+  - component: {fileID: 312773991660602212}
+  - component: {fileID: 3542355320144261096}
   m_Layer: 0
   m_Name: PlayerRoot
   m_TagString: Player
@@ -625,9 +627,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 5
   jumpForce: 12
-  onGround: 0
   hit: 0
   mousePos: {x: 0, y: 0}
+  groundCheckDistance: 1.15
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 256
+  MouseLayer:
+    serializedVersion: 2
+    m_Bits: 256
+  BackMainFrontLayer:
+    serializedVersion: 2
+    m_Bits: 448
+  groundCheck: {fileID: 8447387430766218884}
+  mouseBox: {fileID: 0}
+  gridSize: 1
+  gridOffset: {x: 0.5, y: 0.5}
+  currentToolType: 0
+  currentToolMaterial: 0
+  defaultBreakSpeed: 1
 --- !u!95 &3756626907326096017
 Animator:
   serializedVersion: 5
@@ -649,3 +667,232 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &312773991660602212
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7963816161801216687}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 587ddfd719c7c5945bde8cf4768220e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  End: {fileID: 0}
+  Surface: {fileID: 0}
+  Underground: {fileID: 0}
+  Nether: {fileID: 0}
+  targetTags:
+  - End
+  - Surface
+  - Underground
+  - Nether
+--- !u!114 &3542355320144261096
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7963816161801216687}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ee37363c383fee4a853502fe5dff6be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rb: {fileID: 0}
+  inventors:
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  - blockName: 
+    count: 0
+    isUseable: 1
+  blockHand: {fileID: 0}
+  toolHand: {fileID: 0}
