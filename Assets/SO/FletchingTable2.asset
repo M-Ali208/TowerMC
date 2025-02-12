@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 749ece171b8416946b754f9875e3ca75, type: 3}
+  m_Name: FletchingTable2
+  m_EditorClassIdentifier: 
+  BlockName: FletchingTable2
+  Hardness: 2.5
+  MinHarvestToolTier: 0
+  BestToolType: 0
+  IsTrigger: 0
+  IsPlaceable: 1
+  BreakSound: {fileID: 0}
+  PlaceSound: {fileID: 0}
+  WalkingSound: {fileID: 0}
+  BlockToPlace: {fileID: 5134459531074763851, guid: d8b557eddca0fe84cac5194ce5fc930f, type: 3}

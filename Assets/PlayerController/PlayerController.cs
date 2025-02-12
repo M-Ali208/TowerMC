@@ -1,8 +1,9 @@
-
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using static PlayerController;
+
 public class PlayerController : MonoBehaviour
 {
     public float moveSpeed;
@@ -18,44 +19,71 @@ public class PlayerController : MonoBehaviour
     private bool isBreaking = false;
     private GameObject breakingBlock;
     private float breakDuration;
-   
+
     private BlockSO blockSO;
     [SerializeField] GameObject blockToPlace;
+    [SerializeField] GameObject BlockPlaceParent;
 
     public LayerMaskMode currentLayerMaskMode = LayerMaskMode.Main;
     public BlockPlaceParentMode currentBlockPlaceParentMode = BlockPlaceParentMode.Main;
+    public ToolMaterialSpeed currentToolMaterialSpeed;
+    public CurrentToolMaterial currentToolMaterialTier;
+
+    public ToolType currentToolType;
+
 
     public Vector2Int mousePos;
     [SerializeField] private float groundCheckDistance = 0.3f;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private LayerMask MouseLayer;
-    [SerializeField] private GameObject BlockPlaceParent;
+    
     [SerializeField] private LayerMask BackMainFrontLayer;
     [SerializeField] private Transform groundCheck;
 
     [SerializeField] private GameObject mouseBox;
-    [SerializeField] private float gridSize = 1.0f;
+    private float gridSize = 1.0f;
     [SerializeField] private Vector2 gridOffset = new Vector2(0.5f, 0.5f);
+    
+
+    public float defaultBreakSpeed = 1.0f;
 
     private Inventory inventory;
 
-    public enum LayerMaskMode
+    public enum LayerMaskMode { BackPlane, Main, FrontPlane }
+    public enum BlockPlaceParentMode { BackPlane, Main, FrontPlane }
+    public enum ToolMaterialSpeed { Hand, Wood, Stone, Iron, Diamond, Netherite, Gold }
+    public enum CurrentToolMaterial { Hand, Wood, Gold, Stone, Iron, Diamond, Netherite }
+
+    public static class CurrentToolMaterialTiers
     {
-        BackPlane,
-        Main,
-        FrontPlane
+        public static readonly Dictionary<CurrentToolMaterial, int> MaterialTiers = new Dictionary<CurrentToolMaterial, int>
+        {
+            { CurrentToolMaterial.Hand, 1 },
+            { CurrentToolMaterial.Wood, 2 },
+            { CurrentToolMaterial.Gold, 2 },
+            { CurrentToolMaterial.Stone, 3 },
+            { CurrentToolMaterial.Iron, 4 },
+            { CurrentToolMaterial.Diamond, 5 },
+            { CurrentToolMaterial.Netherite, 5 }
+        };
     }
-    public enum BlockPlaceParentMode
+    public static class ToolMaterialBreakSpeed
     {
-        BackPlane,
-        Main,
-        FrontPlane
+        public static readonly Dictionary<ToolMaterialSpeed, float> BreakSpeed = new Dictionary<ToolMaterialSpeed, float>
+        {
+            { ToolMaterialSpeed.Hand, 1f },
+            { ToolMaterialSpeed.Wood, 2f },
+            { ToolMaterialSpeed.Gold, 12f },
+            { ToolMaterialSpeed.Stone, 4f },
+            { ToolMaterialSpeed.Iron, 6f },
+            { ToolMaterialSpeed.Diamond, 8f },
+            { ToolMaterialSpeed.Netherite, 9f }
+            
+        };
     }
 
-    // Oyuncunun elindeki aracı ve aracın malzeme seviyesini temsil eden değişkenler
-    public ToolType currentToolType;
-    public ToolMaterial currentToolMaterial;
-    public float defaultBreakSpeed = 1.0f;
+
+   
 
     private void Start()
     {
@@ -63,20 +91,13 @@ public class PlayerController : MonoBehaviour
         anim = GetComponent<Animator>();
         inventory = GetComponent<Inventory>();
 
-        if (anim == null)
-            Debug.LogError("Animator component is missing on PlayerController!");
-
-        if (inventory == null)
-            Debug.LogError("Inventory component is missing on PlayerController!");
-
-        if (BlockPlaceParent == null)
-        {
-            BlockPlaceParent = GameObject.Find("Main"); // Varsayılan olarak "Main" isimli GameObject'i ata
  
-        }
+        if (BlockPlaceParent == null)
+            BlockPlaceParent = GameObject.Find("Main");
+
+        // ToolMaterialSpeed enum'un float değerini al
+        
     }
-
-
     private bool onGrounded()
     {
         return Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, groundLayer);
@@ -122,31 +143,38 @@ public class PlayerController : MonoBehaviour
             {
                 float breakSpeedMultiplier = 1.0f;
                 float CurrentBlockHardness = blockData.Hardness;
-
-                if (currentToolType == blockData.BestToolType)
+                float CurrentToolMaterialSpeed = ToolMaterialBreakSpeed.BreakSpeed[currentToolMaterialSpeed];
+                int CurrentToolMaterialTier = CurrentToolMaterialTiers.MaterialTiers[currentToolMaterialTier];
+                if (currentToolType != blockData.BestToolType)
                 {
-                    breakSpeedMultiplier = ToolMaterialBreakSpeed.BreakSpeed[blockData.ToolBreakSpeed];
+                    breakSpeedMultiplier = 1.0f;
                 }
-
-                if (!hardnessMultiplierApplied)
+                else
                 {
-                    if (currentToolMaterial == blockData.MinHarvestToolTier)
-                    {
-                        CurrentBlockHardness *= 1.5f;
-                    }
-                    else
-                    {
-                        CurrentBlockHardness *= 5.0f;
-                    }
-                    hardnessMultiplierApplied = true;
+                    breakSpeedMultiplier = CurrentToolMaterialSpeed;
                 }
+                Debug.Log("Break Speed Multiplier: " + breakSpeedMultiplier);
 
+                
+                if ((ToolMaterial)currentToolMaterialTier >= blockData.MinHarvestToolTier)
+                {
+                    CurrentBlockHardness *= 1.5f;
+                }
+                else
+                {
+                    CurrentBlockHardness *= 5f;
+                }
+                Debug.Log("(ToolMaterial)currentToolMaterial " + (ToolMaterial)currentToolMaterialTier);
+                Debug.Log("BlockData.MinHarvestToolTier " + blockData.MinHarvestToolTier);
+
+                //defaultBreakSpeed = ;
                 breakDuration = CurrentBlockHardness / (defaultBreakSpeed * breakSpeedMultiplier);
+                Debug.Log("Break Duration: " + breakDuration);
 
                 if (breakingBlock != hitObject)
                 {
                     breakingBlock = hitObject;
-                    currentBreakTime = 0f; // Yeni bloğa geçtiyse süre sıfırlansın
+                    currentBreakTime = 0f; 
                 }
 
                 isBreaking = true;
@@ -190,7 +218,7 @@ public class PlayerController : MonoBehaviour
         );
 
         if (playerPosition.x == blockPosition.x && 
-            (playerPosition.y == blockPosition.y || playerPosition.y + 1 == blockPosition.y) && BlockPlaceParent.name == "Main")
+            (playerPosition.y == blockPosition.y || playerPosition.y + 1f == blockPosition.y) && BlockPlaceParent.name == "Main")
         {
             Debug.Log("Cannot place block: Player is in the way!");
             canPlaceBlockMain = false;
@@ -219,7 +247,7 @@ public class PlayerController : MonoBehaviour
                     // Bloğu BlockPlaceParent nesnesinin altına yerleştir
                     newBlock.transform.SetParent(BlockPlaceParent.transform);
 
-                    Debug.Log("Block placed successfully at: " + NewBlockPosition);
+                    
                 }
             }
         }
@@ -314,7 +342,10 @@ public class PlayerController : MonoBehaviour
         {
             isBreaking = false;
             breakingBlock = null;
+            hardnessMultiplierApplied = false;
+            
             currentBreakTime = 0f; // Tuş bırakıldığında süre sıfırlansın
+            
         }
 
         if (isBreaking && breakingBlock != null)
@@ -323,14 +354,13 @@ public class PlayerController : MonoBehaviour
             //Debug.Log("Current Break Time: " + currentBreakTime);
             if (currentBreakTime >= breakDuration)
             {
+                Inventory inventory = GetComponent<Inventory>();
                 GetComponent<Inventory>().AddItem(breakingBlock.name);
                 Destroy(breakingBlock);
                 isBreaking = false;
                 breakingBlock = null;
                 hardnessMultiplierApplied = false;
-                Inventory inventory = GetComponent<Inventory>();
-
-
+                Debug.Log("currentBreakTime" + currentBreakTime);
             }
             
             

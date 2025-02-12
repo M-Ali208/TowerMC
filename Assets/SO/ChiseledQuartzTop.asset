@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 749ece171b8416946b754f9875e3ca75, type: 3}
+  m_Name: ChiseledQuartzTop
+  m_EditorClassIdentifier: 
+  BlockName: ChiseledQuartzTop
+  Hardness: 0.8
+  MinHarvestToolTier: 1
+  BestToolType: 1
+  IsTrigger: 0
+  IsPlaceable: 1
+  BreakSound: {fileID: 0}
+  PlaceSound: {fileID: 0}
+  WalkingSound: {fileID: 0}
+  BlockToPlace: {fileID: 1404597676546701646, guid: 43a8ce18ffe7a514eaeadb8409a2f4e8, type: 3}

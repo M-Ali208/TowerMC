@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 749ece171b8416946b754f9875e3ca75, type: 3}
+  m_Name: BedRock
+  m_EditorClassIdentifier: 
+  BlockName: Bedrock
+  Hardness: Infinity
+  MinHarvestToolTier: 0
+  BestToolType: 0
+  IsTrigger: 0
+  IsPlaceable: 1
+  BreakSound: {fileID: 8300000, guid: e5d127b7b9a36c64c936202cb2f06c89, type: 3}
+  PlaceSound: {fileID: 8300000, guid: 7de01200e9cf78b49bd41eed9f5cfae4, type: 3}
+  WalkingSound: {fileID: 8300000, guid: ea780a295a336d2428f31e612163a0a0, type: 3}
+  BlockToPlace: {fileID: 4114333643510856724, guid: 758ee443d076edf499e7bc17af74550b, type: 3}
