@@ -21,4 +21,4 @@ MonoBehaviour:
   BreakSound: {fileID: 0}
   PlaceSound: {fileID: 0}
   WalkingSound: {fileID: 0}
-  BlockToPlace: {fileID: 8678251631374452341, guid: e996558bbca4d854aa5c2e469a2be0f7, type: 3}
+  BlockToPlace: {fileID: 1077421291348766291, guid: f6464b00bcc61194b9e430be24ff40cd, type: 3}
