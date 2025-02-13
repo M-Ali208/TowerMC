@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 749ece171b8416946b754f9875e3ca75, type: 3}
   m_Name: IronTrapDoor
   m_EditorClassIdentifier: 
-  BlockName: IronTRapDoor
+  BlockName: IronTrapDoor
   Hardness: 5
-  MinHarvestToolTier: 0
-  BestToolType: 0
+  MinHarvestToolTier: 3
+  BestToolType: 1
   IsTrigger: 0
   IsPlaceable: 1
   BreakSound: {fileID: 0}

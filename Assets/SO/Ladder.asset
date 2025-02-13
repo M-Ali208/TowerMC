@@ -15,7 +15,7 @@ MonoBehaviour:
   BlockName: Ladder
   Hardness: 0.4
   MinHarvestToolTier: 0
-  BestToolType: 0
+  BestToolType: 3
   IsTrigger: 1
   IsPlaceable: 1
   BreakSound: {fileID: 0}

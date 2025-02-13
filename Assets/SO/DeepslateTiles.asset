@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: DeepslateTiles
   m_EditorClassIdentifier: 
   BlockName: DeepslateTiles
-  Hardness: 3
-  MinHarvestToolTier: 0
-  BestToolType: 0
+  Hardness: 3.5
+  MinHarvestToolTier: 1
+  BestToolType: 1
   IsTrigger: 0
   IsPlaceable: 1
   BreakSound: {fileID: 0}

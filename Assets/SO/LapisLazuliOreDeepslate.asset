@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BlockName: LapisLazuliOreDeepslate
   Hardness: 4.5
-  MinHarvestToolTier: 0
-  BestToolType: 0
+  MinHarvestToolTier: 3
+  BestToolType: 1
   IsTrigger: 0
   IsPlaceable: 1
   BreakSound: {fileID: 0}

@@ -15,7 +15,7 @@ MonoBehaviour:
   BlockName: BrownConcretePowder
   Hardness: 0.5
   MinHarvestToolTier: 0
-  BestToolType: 0
+  BestToolType: 2
   IsTrigger: 0
   IsPlaceable: 1
   BreakSound: {fileID: 0}

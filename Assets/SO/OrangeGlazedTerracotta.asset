@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BlockName: OrangeGlazedTerracotta
   Hardness: 1.4
-  MinHarvestToolTier: 0
-  BestToolType: 0
+  MinHarvestToolTier: 1
+  BestToolType: 1
   IsTrigger: 0
   IsPlaceable: 1
   BreakSound: {fileID: 0}

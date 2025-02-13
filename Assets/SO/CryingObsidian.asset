@@ -15,7 +15,7 @@ MonoBehaviour:
   BlockName: CryingObsidian
   Hardness: 50
   MinHarvestToolTier: 5
-  BestToolType: 0
+  BestToolType: 1
   IsTrigger: 0
   IsPlaceable: 1
   BreakSound: {fileID: 0}

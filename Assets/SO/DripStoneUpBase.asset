@@ -15,7 +15,7 @@ MonoBehaviour:
   BlockName: DripStoneUpBase
   Hardness: 1.5
   MinHarvestToolTier: 0
-  BestToolType: 0
+  BestToolType: 1
   IsTrigger: 0
   IsPlaceable: 1
   BreakSound: {fileID: 0}

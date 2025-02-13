@@ -15,7 +15,7 @@ MonoBehaviour:
   BlockName: BlueConcrete
   Hardness: 1.8
   MinHarvestToolTier: 1
-  BestToolType: 0
+  BestToolType: 1
   IsTrigger: 0
   IsPlaceable: 1
   BreakSound: {fileID: 0}

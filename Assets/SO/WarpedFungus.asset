@@ -16,7 +16,7 @@ MonoBehaviour:
   Hardness: 0
   MinHarvestToolTier: 0
   BestToolType: 0
-  IsTrigger: 0
+  IsTrigger: 1
   IsPlaceable: 1
   BreakSound: {fileID: 0}
   PlaceSound: {fileID: 0}

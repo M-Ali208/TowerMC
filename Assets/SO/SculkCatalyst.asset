@@ -15,7 +15,7 @@ MonoBehaviour:
   BlockName: SculkCatalyst
   Hardness: 3
   MinHarvestToolTier: 0
-  BestToolType: 0
+  BestToolType: 4
   IsTrigger: 0
   IsPlaceable: 1
   BreakSound: {fileID: 0}
