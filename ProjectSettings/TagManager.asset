@@ -9,6 +9,7 @@ TagManager:
   - End
   - Underground
   - Surface
+  - Grid
   layers:
   - Default
   - TransparentFX
@@ -19,7 +20,7 @@ TagManager:
   - BackPlane
   - FrontPlane
   - Main
-  - 
+  - Manager
   - 
   - 
   - 

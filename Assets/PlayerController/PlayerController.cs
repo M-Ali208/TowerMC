@@ -1,8 +1,9 @@
-
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using static PlayerController;
+
 public class PlayerController : MonoBehaviour
 {
     public float moveSpeed;
@@ -18,44 +19,69 @@ public class PlayerController : MonoBehaviour
     private bool isBreaking = false;
     private GameObject breakingBlock;
     private float breakDuration;
-   
+
     private BlockSO blockSO;
     [SerializeField] GameObject blockToPlace;
+    [SerializeField] GameObject BlockPlaceParent;
 
     public LayerMaskMode currentLayerMaskMode = LayerMaskMode.Main;
     public BlockPlaceParentMode currentBlockPlaceParentMode = BlockPlaceParentMode.Main;
+    public ToolMaterialSpeed currentToolMaterialSpeed;
+    public CurrentToolMaterial currentToolMaterialTier;
+    public ToolType currentToolType;
 
     public Vector2Int mousePos;
     [SerializeField] private float groundCheckDistance = 0.3f;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private LayerMask MouseLayer;
-    [SerializeField] private GameObject BlockPlaceParent;
     [SerializeField] private LayerMask BackMainFrontLayer;
     [SerializeField] private Transform groundCheck;
 
     [SerializeField] private GameObject mouseBox;
-    [SerializeField] private float gridSize = 1.0f;
+    [SerializeField] private GameObject OutlineBox;
+    private float gridSize = 1.0f;
     [SerializeField] private Vector2 gridOffset = new Vector2(0.5f, 0.5f);
 
-    private Inventory inventory;
-
-    public enum LayerMaskMode
-    {
-        BackPlane,
-        Main,
-        FrontPlane
-    }
-    public enum BlockPlaceParentMode
-    {
-        BackPlane,
-        Main,
-        FrontPlane
-    }
-
-    // Oyuncunun elindeki aracı ve aracın malzeme seviyesini temsil eden değişkenler
-    public ToolType currentToolType;
-    public ToolMaterial currentToolMaterial;
     public float defaultBreakSpeed = 1.0f;
+    public float blockPlaceDelay = 0.12f;
+
+    private Inventory inventory;
+    private Coroutine blockPlaceCoroutine;
+
+    private float blockRotationAngle = 0f;
+
+    public enum LayerMaskMode { BackPlane, Main, FrontPlane }
+    public enum BlockPlaceParentMode { BackPlane, Main, FrontPlane }
+    public enum ToolMaterialSpeed { Hand, Wood, Stone, Iron, Diamond, Netherite, Gold }
+    public enum CurrentToolMaterial { Hand, Wood, Gold, Stone, Iron, Diamond, Netherite }
+
+    public static class CurrentToolMaterialTiers
+    {
+        public static readonly Dictionary<CurrentToolMaterial, int> MaterialTiers = new Dictionary<CurrentToolMaterial, int>
+        {
+            { CurrentToolMaterial.Hand, 1 },
+            { CurrentToolMaterial.Wood, 2 },
+            { CurrentToolMaterial.Gold, 2 },
+            { CurrentToolMaterial.Stone, 3 },
+            { CurrentToolMaterial.Iron, 4 },
+            { CurrentToolMaterial.Diamond, 5 },
+            { CurrentToolMaterial.Netherite, 5 }
+        };
+    }
+
+    public static class ToolMaterialBreakSpeed
+    {
+        public static readonly Dictionary<ToolMaterialSpeed, float> BreakSpeed = new Dictionary<ToolMaterialSpeed, float>
+        {
+            { ToolMaterialSpeed.Hand, 1f },
+            { ToolMaterialSpeed.Wood, 2f },
+            { ToolMaterialSpeed.Gold, 12f },
+            { ToolMaterialSpeed.Stone, 4f },
+            { ToolMaterialSpeed.Iron, 6f },
+            { ToolMaterialSpeed.Diamond, 8f },
+            { ToolMaterialSpeed.Netherite, 9f }
+        };
+    }
 
     private void Start()
     {
@@ -63,19 +89,9 @@ public class PlayerController : MonoBehaviour
         anim = GetComponent<Animator>();
         inventory = GetComponent<Inventory>();
 
-        if (anim == null)
-            Debug.LogError("Animator component is missing on PlayerController!");
-
-        if (inventory == null)
-            Debug.LogError("Inventory component is missing on PlayerController!");
-
         if (BlockPlaceParent == null)
-        {
-            BlockPlaceParent = GameObject.Find("Main"); // Varsayılan olarak "Main" isimli GameObject'i ata
- 
-        }
+            BlockPlaceParent = GameObject.Find("Main");
     }
-
 
     private bool onGrounded()
     {
@@ -97,7 +113,7 @@ public class PlayerController : MonoBehaviour
             BlockSO blockData = hitObject.GetComponent<Blocks>().blockSO;
             if (blockData != null)
             {
-
+                // İşlemler burada yapılabilir
             }
 
             if (hitObject.transform.parent != null)
@@ -119,13 +135,11 @@ public class PlayerController : MonoBehaviour
 
             if (blockData != null)
             {
-                float breakSpeedMultiplier = 1.0f;
-                float CurrentBlockHardness = blockData.Hardness;
+                float breakSpeedMultiplier = CalculateBreakSpeedMultiplier(blockData);
+                float currentBlockHardness = CalculateBlockHardness(blockData);
 
-                if (currentToolType == blockData.BestToolType)
-                {
-                    breakSpeedMultiplier = ToolMaterialBreakSpeed.BreakSpeed[blockData.ToolBreakSpeed];
-                }
+                breakDuration = currentBlockHardness / (defaultBreakSpeed * breakSpeedMultiplier);
+                Debug.Log("Break Duration: " + breakDuration);
 
                 if (!hardnessMultiplierApplied)
                 {
@@ -145,7 +159,7 @@ public class PlayerController : MonoBehaviour
                 if (breakingBlock != hitObject)
                 {
                     breakingBlock = hitObject;
-                    currentBreakTime = 0f; // Yeni bloğa geçtiyse süre sıfırlansın
+                    currentBreakTime = 0f;
                 }
 
                 isBreaking = true;
@@ -158,76 +172,138 @@ public class PlayerController : MonoBehaviour
     }
 
 
-    private void BlockPlace()
-        
+    private float CalculateBlockHardness(BlockSO blockData)
     {
-        Vector2 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        RaycastHit2D[] hits = Physics2D.RaycastAll(mouseWorldPosition, Vector2.zero, Mathf.Infinity, MouseLayer);
+        float currentBlockHardness = blockData.Hardness;
+        int currentToolTier = CurrentToolMaterialTiers.MaterialTiers[currentToolMaterialTier];
 
-        bool canPlaceBlock = true;
-        bool canPlaceBlockMain = true;
+        if (currentToolTier >= (int)ToolMaterialTiers.MaterialTiers[blockData.MinHarvestToolTier])
+        {
+            currentBlockHardness *= 1.5f;
+        }
+        else
+        {
+            currentBlockHardness *= 5f;
+        }
+        return currentBlockHardness;
+    }
 
+    private IEnumerator BlockPlace()
+    {
+        while (Input.GetMouseButton(1))
+        {
+            Vector2 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            RaycastHit2D[] hits = Physics2D.RaycastAll(mouseWorldPosition, Vector2.zero, Mathf.Infinity, MouseLayer);
+
+            if (CanPlaceBlock(hits))
+            {
+                PlaceBlock(mouseWorldPosition);
+            }
+            else
+            {
+                Debug.Log("Block placement failed!");
+            }
+
+            yield return new WaitForSeconds(blockPlaceDelay);
+        }
+    }
+
+    private bool CanPlaceBlock(RaycastHit2D[] hits)
+    {
         foreach (RaycastHit2D hit in hits)
         {
             GameObject hitObject = hit.collider.gameObject;
             BlockSO blockData = hitObject.GetComponent<Blocks>()?.blockSO;
+
             if (blockData != null)
             {
-                canPlaceBlock = false;
-                break;
-            }
-        }
-
-        Vector3 playerPosition = transform.position;
-        playerPosition.x = Mathf.Round((playerPosition.x - gridOffset.x) / gridSize) * gridSize + gridOffset.x;
-        playerPosition.y = Mathf.Round((playerPosition.y - gridOffset.y) / gridSize) * gridSize + gridOffset.y;
-
-        Vector3 blockPosition = new Vector3(
-            Mathf.Round((mouseWorldPosition.x - gridOffset.x) / gridSize) * gridSize + gridOffset.x,
-            Mathf.Round((mouseWorldPosition.y - gridOffset.y) / gridSize) * gridSize + gridOffset.y,
-            BlockPlaceParent.transform.position.z
-        );
-
-        if (playerPosition.x == blockPosition.x && 
-            (playerPosition.y == blockPosition.y || playerPosition.y + 1 == blockPosition.y) && BlockPlaceParent.name == "Main")
-        {
-            Debug.Log("Cannot place block: Player is in the way!");
-            canPlaceBlockMain = false;
-        }
-
-
-        if (canPlaceBlock && canPlaceBlockMain)
-        {
-            if (blockToPlace != null)
-            {
-                BlockSO blockSO = blockToPlace.GetComponent<Blocks>()?.blockSO;
-                if (blockSO != null && blockSO.IsPlaceable)
+                // Geçerli yerleştirme katmanına göre kontrol et
+                switch (currentLayerMaskMode)
                 {
-                    Vector3 NewBlockPosition = Vector3.zero;
-
-                    // Blok yerleştirme pozisyonunu ızgaraya hizala
-                    NewBlockPosition.x = Mathf.Round((mouseWorldPosition.x - gridOffset.x) / gridSize) * gridSize + gridOffset.x;
-                    NewBlockPosition.y = Mathf.Round((mouseWorldPosition.y - gridOffset.y) / gridSize) * gridSize + gridOffset.y;
-                    NewBlockPosition.z = BlockPlaceParent.transform.position.z;
-                    
-
-                    // Yeni bloğu oluştur ve pozisyonunu ayarla
-                    GameObject newBlock = Instantiate(blockToPlace, NewBlockPosition, Quaternion.identity);
-                    newBlock.GetComponent<Blocks>().blockSO.IsPlaceable = true;
-
-                    // Bloğu BlockPlaceParent nesnesinin altına yerleştir
-                    newBlock.transform.SetParent(BlockPlaceParent.transform);
-
-                    Debug.Log("Block placed successfully at: " + NewBlockPosition);
+                    case LayerMaskMode.BackPlane:
+                        if (hitObject.layer == LayerMask.NameToLayer("BackPlane"))
+                        {
+                            return false;
+                        }
+                        break;
+                    case LayerMaskMode.Main:
+                        if (hitObject.layer == LayerMask.NameToLayer("Main"))
+                        {
+                            return false;
+                        }
+                        break;
+                    case LayerMaskMode.FrontPlane:
+                        if (hitObject.layer == LayerMask.NameToLayer("FrontPlane"))
+                        {
+                            return false;
+                        }
+                        break;
                 }
             }
         }
-        else
+        return true;
+    }
+
+    private void PlaceBlock(Vector2 mouseWorldPosition)
+    {
+        Vector3 playerPosition = GetRoundedPosition(transform.position);
+        Vector3 blockPosition = GetRoundedPosition(mouseWorldPosition);
+
+        if (IsPlayerInTheWay(playerPosition, blockPosition))
         {
-            Debug.Log("Block placement failed!");
+            Debug.Log("Cannot place block: Player is in the way!");
+            return;
+        }
+
+        if (blockToPlace != null)
+        {
+            BlockSO blockSO = blockToPlace.GetComponent<Blocks>()?.blockSO;
+            if (blockSO != null && blockSO.IsPlaceable)
+            {
+                Vector3 newBlockPosition = GetRoundedPosition(mouseWorldPosition);
+                newBlockPosition.z = BlockPlaceParent.transform.position.z;
+
+                GameObject newBlock = Instantiate(blockToPlace, newBlockPosition, Quaternion.Euler(0, 0, blockRotationAngle));
+                newBlock.GetComponent<Blocks>().blockSO.IsPlaceable = true;
+                newBlock.transform.SetParent(BlockPlaceParent.transform);
+                SpriteRenderer newBlockRenderer = newBlock.GetComponent<SpriteRenderer>();
+
+                if (newBlockRenderer != null)
+                {
+                    if (BlockPlaceParent.name == "Main")
+                    {
+                        newBlockRenderer.sortingOrder = 2;
+                    }
+                    else if (BlockPlaceParent.name == "BackPlane")
+                    {
+                        newBlockRenderer.sortingOrder = -1;
+                    }
+                    else if (BlockPlaceParent.name == "FrontPlane")
+                    {
+                        newBlockRenderer.sortingOrder = 3;
+                    }
+                }
+
+                Debug.Log("New block placed at position: " + newBlockPosition);
+            }
         }
     }
 
+    private Vector3 GetRoundedPosition(Vector3 position)
+    {
+        position.x = Mathf.Round((position.x - gridOffset.x) / gridSize) * gridSize + gridOffset.x;
+        position.y = Mathf.Round((position.y - gridOffset.y) / gridSize) * gridSize + gridOffset.y;
+        return position;
+    }
+
+    private bool IsPlayerInTheWay(Vector3 playerPosition, Vector3 blockPosition)
+    {
+        return playerPosition.x == blockPosition.x &&
+               (playerPosition.y == blockPosition.y ||
+               playerPosition.y + 1f == blockPosition.y ||
+               playerPosition.y - 1f == blockPosition.y) &&
+               BlockPlaceParent.name == "Main";
+    }
 
     private void ChangeLayerMaskMode()
     {
@@ -248,6 +324,7 @@ public class PlayerController : MonoBehaviour
         }
         Debug.Log("Current LayerMask Mode: " + currentLayerMaskMode);
     }
+
     private void ChangeBlockPlaceParentMode()
     {
         switch (currentBlockPlaceParentMode)
@@ -267,6 +344,7 @@ public class PlayerController : MonoBehaviour
         }
         Debug.Log("Current BlockPlaceParent Mode: " + currentBlockPlaceParentMode);
     }
+
     private void MovePlayer()
     {
         horizontal = Input.GetAxis("Horizontal");
@@ -289,19 +367,17 @@ public class PlayerController : MonoBehaviour
 
         rb.velocity = movement;
     }
-    
 
     private void FixedUpdate()
     {
-
         hit = Input.GetMouseButton(0);
-
         MovePlayer();
     }
 
     private void Update()
     {
         UpdateMouseBox();
+        UpdateMouseOutlineBox();
         anim.SetFloat("Horizontal", horizontal);
         anim.SetBool("hit", hit);
 
@@ -311,35 +387,43 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            isBreaking = false;
-            breakingBlock = null;
-            currentBreakTime = 0f; // Tuş bırakıldığında süre sıfırlansın
+            ResetBreakingState();
         }
 
         if (isBreaking && breakingBlock != null)
         {
-            currentBreakTime += 2 * Time.deltaTime;
-            //Debug.Log("Current Break Time: " + currentBreakTime);
+            currentBreakTime += Time.deltaTime;
             if (currentBreakTime >= breakDuration)
             {
-                GetComponent<Inventory>().AddItem(breakingBlock.name);
+                int currentToolTier = CurrentToolMaterialTiers.MaterialTiers[currentToolMaterialTier];
+                BlockSO blockData = breakingBlock.GetComponent<Blocks>().blockSO;
+
+                if (currentToolTier >= (int)ToolMaterialTiers.MaterialTiers[blockData.MinHarvestToolTier])
+                {
+                    inventory.AddItem(breakingBlock.name);
+                }
+
                 Destroy(breakingBlock);
-                isBreaking = false;
-                breakingBlock = null;
-                hardnessMultiplierApplied = false;
-                Inventory inventory = GetComponent<Inventory>();
-
-
+                Debug.Log("Break Time: " + currentBreakTime);
+                ResetBreakingState();
             }
-            
-            
-            
         }
 
-        if (Input.GetMouseButton(1) && !Input.GetMouseButtonUp(1))
+        if (Input.GetMouseButtonDown(1))
         {
-            //mouseBlockCheck();
-            BlockPlace();
+            if (blockPlaceCoroutine == null)
+            {
+                blockPlaceCoroutine = StartCoroutine(BlockPlace());
+            }
+        }
+
+        if (Input.GetMouseButtonUp(1))
+        {
+            if (blockPlaceCoroutine != null)
+            {
+                StopCoroutine(blockPlaceCoroutine);
+                blockPlaceCoroutine = null;
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.T))
@@ -348,6 +432,18 @@ public class PlayerController : MonoBehaviour
             ChangeBlockPlaceParentMode();
         }
 
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            RotateBlock();
+        }
+    }
+
+    private void ResetBreakingState()
+    {
+        isBreaking = false;
+        breakingBlock = null;
+        hardnessMultiplierApplied = false;
+        currentBreakTime = 0f;
     }
 
     private void UpdateMouseBox()
@@ -355,12 +451,47 @@ public class PlayerController : MonoBehaviour
         if (Camera.main != null)
         {
             Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            mouseWorldPosition.z = 0; // Z konumunu 0 yap
+            mouseWorldPosition.z = 0;
 
-            mouseWorldPosition.x = Mathf.Round((mouseWorldPosition.x - gridOffset.x) / gridSize) * gridSize + gridOffset.x;
-            mouseWorldPosition.y = Mathf.Round((mouseWorldPosition.y - gridOffset.y) / gridSize) * gridSize + gridOffset.y;
+            mouseWorldPosition = GetRoundedPosition(mouseWorldPosition);
             mouseWorldPosition.z = -0.5f;
             mouseBox.transform.position = mouseWorldPosition;
+
+            // Elde tutulan bloğun sprite'ını şeffaf bir şekilde göster
+            if (blockToPlace != null)
+            {
+                SpriteRenderer mouseBoxRenderer = mouseBox.GetComponent<SpriteRenderer>();
+                SpriteRenderer blockToPlaceRenderer = blockToPlace.GetComponent<SpriteRenderer>();
+
+                if (mouseBoxRenderer != null && blockToPlaceRenderer != null)
+                {
+                    mouseBoxRenderer.sprite = blockToPlaceRenderer.sprite;
+                    mouseBoxRenderer.color = new Color(1f, 1f, 1f, 0.5f); // Şeffaflık ayarı
+                    mouseBoxRenderer.transform.rotation = Quaternion.Euler(0, 0, blockRotationAngle);
+                }
+            }
         }
+    }
+    private void UpdateMouseOutlineBox()
+    {
+        if (Camera.main != null)
+        {
+            Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            mouseWorldPosition.z = 0;
+            mouseWorldPosition = GetRoundedPosition(mouseWorldPosition);
+            mouseWorldPosition.z = -0.5f;
+            OutlineBox.transform.position = mouseWorldPosition;
+        }
+    }
+
+
+private void RotateBlock()
+    {
+        blockRotationAngle += 90f;
+        if (blockRotationAngle >= 360f)
+        {
+            blockRotationAngle = 0f;
+        }
+        Debug.Log("Block rotation angle: " + blockRotationAngle);
     }
 }

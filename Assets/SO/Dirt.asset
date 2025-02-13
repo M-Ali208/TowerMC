@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 749ece171b8416946b754f9875e3ca75, type: 3}
+  m_Name: Dirt
+  m_EditorClassIdentifier: 
+  BlockName: Dirt
+  Hardness: 0.5
+  MinHarvestToolTier: 0
+  BestToolType: 2
+  IsTrigger: 0
+  IsPlaceable: 1
+  BreakSound: {fileID: 0}
+  PlaceSound: {fileID: 0}
+  WalkingSound: {fileID: 0}
+  BlockToPlace: {fileID: 588074740146647627, guid: 9563cdd43c4a74247aea9670d7ec2043, type: 3}

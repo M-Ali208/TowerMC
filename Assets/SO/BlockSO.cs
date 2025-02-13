@@ -7,7 +7,6 @@ public class BlockSO : ScriptableObject
     public string BlockName;
     public float Hardness;
     public ToolMaterial MinHarvestToolTier;
-    public ToolMaterialSpeed ToolBreakSpeed;
     public ToolType BestToolType;
     public bool IsTrigger;
     public bool IsPlaceable;
@@ -37,17 +36,9 @@ public enum ToolType
         Iron,
         Diamond,
         Netherite
-    }
-    public enum ToolMaterialSpeed
-    {
-        Hand,
-        Wood,
-        Stone,
-        Iron,
-        Diamond,
-        Netherite,
-        Gold
+
 }
+    
 public static class ToolMaterialTiers
     {
         public static readonly Dictionary<ToolMaterial, int> MaterialTiers = new Dictionary<ToolMaterial, int>
@@ -61,19 +52,7 @@ public static class ToolMaterialTiers
             { ToolMaterial.Netherite, 5 }
         };
     }
-public static class ToolMaterialBreakSpeed
-{
-    public static readonly Dictionary<ToolMaterialSpeed, int> BreakSpeed = new Dictionary<ToolMaterialSpeed, int>
-    {
-        { ToolMaterialSpeed.Hand, 1 },
-        { ToolMaterialSpeed.Wood, 2 },
-        { ToolMaterialSpeed.Stone, 4 },
-        { ToolMaterialSpeed.Iron, 6 },
-        { ToolMaterialSpeed.Diamond, 8 },
-        { ToolMaterialSpeed.Netherite, 9 },
-        { ToolMaterialSpeed.Gold, 12 }
-    };
-}
+
 
 /*
 public void ApplyToCollider(BoxCollider2D collider)
