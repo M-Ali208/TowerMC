@@ -141,21 +141,6 @@ public class PlayerController : MonoBehaviour
                 breakDuration = currentBlockHardness / (defaultBreakSpeed * breakSpeedMultiplier);
                 Debug.Log("Break Duration: " + breakDuration);
 
-                if (!hardnessMultiplierApplied)
-                {
-                    if (currentToolMaterial == blockData.MinHarvestToolTier)
-                    {
-                        CurrentBlockHardness *= 1.5f;
-                    }
-                    else
-                    {
-                        CurrentBlockHardness *= 5.0f;
-                    }
-                    hardnessMultiplierApplied = true;
-                }
-
-                breakDuration = CurrentBlockHardness / (defaultBreakSpeed * breakSpeedMultiplier);
-
                 if (breakingBlock != hitObject)
                 {
                     breakingBlock = hitObject;
@@ -171,6 +156,14 @@ public class PlayerController : MonoBehaviour
         breakingBlock = null;
     }
 
+    private float CalculateBreakSpeedMultiplier(BlockSO blockData)
+    {
+        if (currentToolType != blockData.BestToolType)
+        {
+            return 1.0f;
+        }
+        return ToolMaterialBreakSpeed.BreakSpeed[currentToolMaterialSpeed];
+    }
 
     private float CalculateBlockHardness(BlockSO blockData)
     {
