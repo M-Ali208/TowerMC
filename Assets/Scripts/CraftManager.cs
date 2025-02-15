@@ -21,7 +21,7 @@ public class CraftList
 public class CraftManager : MonoBehaviour
 {
     private Inventory playerInventory;
-    [SerializeField]private List<CraftList> craftLists;
+    public List<CraftList> craftLists;
 
     private void Start() {
         playerInventory = GameObject.FindGameObjectWithTag("Player").GetComponent<Inventory>();
@@ -45,8 +45,44 @@ public class CraftManager : MonoBehaviour
                 {
                     craftLists[x].isCraftable = true;
                 }
+                else
+                {
+                    craftLists[x].isCraftable = false;
+                }
                
             }
+        }
+    }
+
+    public void Craft(string blockName)
+    {
+        foreach (var item in craftLists)
+        {
+            if (item.itemName == blockName && item.isCraftable)
+            {
+                foreach (var item2 in item.requireItems)
+                {
+                    foreach (var item3 in playerInventory.inventors)
+                    {
+                        if (item2.itemName == item3.blockName)
+                        {
+                            item3.count -= item2.count;
+                            goto ContinueRequireItems;
+                        }
+                        else if (item3 == playerInventory.inventors[63])
+                        {
+                            goto ContinuecraftList;
+                        }
+                    }
+                    ContinueRequireItems:
+                    ;
+                    
+                }
+                playerInventory.AddItem(item.itemName);
+                Craftables();
+            }
+            ContinuecraftList:
+            ;
         }
     }
 }

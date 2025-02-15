@@ -10,6 +10,8 @@ TagManager:
   - Underground
   - Surface
   - Grid
+  - Manager
+  - CraftManager
   layers:
   - Default
   - TransparentFX

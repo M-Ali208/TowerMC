@@ -2,10 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using static PlayerController;
 
+
+public enum CurrentToolMaterial { Hand, Wood, Gold, Stone, Iron, Diamond, Netherite }
+public enum LayerMaskMode { BackPlane, Main, FrontPlane }
+public enum BlockPlaceParentMode { BackPlane, Main, FrontPlane }
+public enum ToolMaterialSpeed { Hand, Wood, Stone, Iron, Diamond, Netherite, Gold }
 public class PlayerController : MonoBehaviour
 {
+    public static PlayerController instance;
     public float moveSpeed;
     public float jumpForce;
 
@@ -21,7 +26,7 @@ public class PlayerController : MonoBehaviour
     private float breakDuration;
 
     private BlockSO blockSO;
-    [SerializeField] GameObject blockToPlace;
+    [HideInInspector]public GameObject blockToPlace;
     [SerializeField] GameObject BlockPlaceParent;
 
     public LayerMaskMode currentLayerMaskMode = LayerMaskMode.Main;
@@ -50,11 +55,6 @@ public class PlayerController : MonoBehaviour
 
     private float blockRotationAngle = 0f;
 
-    public enum LayerMaskMode { BackPlane, Main, FrontPlane }
-    public enum BlockPlaceParentMode { BackPlane, Main, FrontPlane }
-    public enum ToolMaterialSpeed { Hand, Wood, Stone, Iron, Diamond, Netherite, Gold }
-    public enum CurrentToolMaterial { Hand, Wood, Gold, Stone, Iron, Diamond, Netherite }
-
     public static class CurrentToolMaterialTiers
     {
         public static readonly Dictionary<CurrentToolMaterial, int> MaterialTiers = new Dictionary<CurrentToolMaterial, int>
@@ -82,7 +82,10 @@ public class PlayerController : MonoBehaviour
             { ToolMaterialSpeed.Netherite, 9f }
         };
     }
-
+    void Awake()
+    {
+        instance = this;
+    }
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -183,7 +186,7 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator BlockPlace()
     {
-        while (Input.GetMouseButton(1))
+        while (Input.GetMouseButton(1) && inventory.isHaveBlock())
         {
             Vector2 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             RaycastHit2D[] hits = Physics2D.RaycastAll(mouseWorldPosition, Vector2.zero, Mathf.Infinity, MouseLayer);
@@ -191,6 +194,7 @@ public class PlayerController : MonoBehaviour
             if (CanPlaceBlock(hits))
             {
                 PlaceBlock(mouseWorldPosition);
+                inventory.inventors.Find(obj => obj.blockName == blockToPlace.name).count--;
             }
             else
             {
@@ -393,6 +397,7 @@ public class PlayerController : MonoBehaviour
 
                 if (currentToolTier >= (int)ToolMaterialTiers.MaterialTiers[blockData.MinHarvestToolTier])
                 {
+                    breakingBlock.name = breakingBlock.name.Replace("(Clone)", "");
                     inventory.AddItem(breakingBlock.name);
                 }
 
@@ -478,7 +483,7 @@ public class PlayerController : MonoBehaviour
     }
 
 
-private void RotateBlock()
+    private void RotateBlock()
     {
         blockRotationAngle += 90f;
         if (blockRotationAngle >= 360f)

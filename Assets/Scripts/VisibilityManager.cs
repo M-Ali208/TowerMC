@@ -40,7 +40,7 @@ public class VisibilityManager : MonoBehaviour
         foreach (var item in gameObjects)
         {
             // Oyuncu, Grid veya Kamera etiketli objeleri atla.
-            if (item.CompareTag("Player") || item.CompareTag("Grid") || item.CompareTag("MainCamera") || item.CompareTag("Surface") || item.CompareTag("End") || item.CompareTag("Underground") || item.CompareTag("Nether"))
+            if (item.CompareTag("Player") || item.CompareTag("Grid") || item.CompareTag("MainCamera") || item.CompareTag("Surface") || item.CompareTag("End") || item.CompareTag("Underground") || item.CompareTag("Nether") || item.CompareTag("CraftManager"))
                 continue;
 
             float y = item.transform.position.y;
