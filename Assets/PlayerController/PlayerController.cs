@@ -53,7 +53,7 @@ public class PlayerController : MonoBehaviour
     private Inventory inventory;
     private Coroutine blockPlaceCoroutine;
 
-    private float blockRotationAngle = 0f;
+    public float blockRotationAngle = 0f;
 
     public static class CurrentToolMaterialTiers
     {
@@ -241,7 +241,7 @@ public class PlayerController : MonoBehaviour
         return true;
     }
 
-    private void PlaceBlock(Vector2 mouseWorldPosition)
+    public void PlaceBlock(Vector2 mouseWorldPosition)
     {
         Vector3 playerPosition = GetRoundedPosition(transform.position);
         Vector3 blockPosition = GetRoundedPosition(mouseWorldPosition);
@@ -286,7 +286,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private Vector3 GetRoundedPosition(Vector3 position)
+    public Vector3 GetRoundedPosition(Vector3 position)
     {
         position.x = Mathf.Round((position.x - gridOffset.x) / gridSize) * gridSize + gridOffset.x;
         position.y = Mathf.Round((position.y - gridOffset.y) / gridSize) * gridSize + gridOffset.y;
