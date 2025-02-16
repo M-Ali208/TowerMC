@@ -18,6 +18,7 @@ public class CraftingUI : MonoBehaviour
         {
             craftButtons[i].name = craftManager.craftLists[i].itemName;
             GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>($"Assets/Prefabs/Blocks/{craftButtons[i].name}.prefab");
+            //blockso ile iliþkilendirlecek yoksa build alamýyok
             if (prefab != null)
             {
                 craftButtons[i].GetComponent<Image>().sprite = prefab.GetComponent<SpriteRenderer>().sprite;

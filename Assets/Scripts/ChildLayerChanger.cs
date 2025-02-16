@@ -47,6 +47,14 @@ public class ChildLayerChanger : MonoBehaviour
                 }
                 else if (parent.name == "Main")
                 {
+                    Blocks blockComponent = child.GetComponent<Blocks>(); // Blocks bileþenini al
+                    if (blockComponent != null && blockComponent.blockSO != null)
+                    {
+                        boxCollider.isTrigger = blockComponent.blockSO.IsTrigger;
+                    }
+                }
+                else
+                {
                     boxCollider.isTrigger = false;
                 }
             }

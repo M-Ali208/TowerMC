@@ -98,7 +98,20 @@ public class PlayerController : MonoBehaviour
 
     private bool onGrounded()
     {
-        return Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, groundLayer);
+        Vector3 playerPosition = GetRoundedPosition(transform.position);
+        playerPosition.y -= 0.5f;
+        RaycastHit2D hit = Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, groundLayer);
+        RaycastHit2D playerhit = Physics2D.Raycast(playerPosition, Vector2.zero, groundCheckDistance, groundLayer);
+
+        if (hit.collider != null)
+        {
+            BlockSO blockData = playerhit.collider.GetComponent<Blocks>()?.blockSO;
+            if (blockData != null && !blockData.IsTrigger)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void mouseBlockCheck()
@@ -248,6 +261,7 @@ public class PlayerController : MonoBehaviour
 
         if (IsPlayerInTheWay(playerPosition, blockPosition))
         {
+            inventory.inventors.Find(obj => obj.blockName == blockToPlace.name).count++;
             Debug.Log("Cannot place block: Player is in the way!");
             return;
         }
