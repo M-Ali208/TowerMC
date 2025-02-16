@@ -306,17 +306,17 @@ public class PlayerController : MonoBehaviour
     {
         switch (currentLayerMaskMode)
         {
-            case LayerMaskMode.BackPlane:
+            case LayerMaskMode.FrontPlane:
                 currentLayerMaskMode = LayerMaskMode.Main;
                 MouseLayer = LayerMask.GetMask("Main");
                 break;
             case LayerMaskMode.Main:
-                currentLayerMaskMode = LayerMaskMode.FrontPlane;
-                MouseLayer = LayerMask.GetMask("FrontPlane");
-                break;
-            case LayerMaskMode.FrontPlane:
                 currentLayerMaskMode = LayerMaskMode.BackPlane;
                 MouseLayer = LayerMask.GetMask("BackPlane");
+                break;
+            case LayerMaskMode.BackPlane:
+                currentLayerMaskMode = LayerMaskMode.FrontPlane;
+                MouseLayer = LayerMask.GetMask("FrontPlane");
                 break;
         }
         Debug.Log("Current LayerMask Mode: " + currentLayerMaskMode);
@@ -326,17 +326,17 @@ public class PlayerController : MonoBehaviour
     {
         switch (currentBlockPlaceParentMode)
         {
-            case BlockPlaceParentMode.BackPlane:
+            case BlockPlaceParentMode.FrontPlane:
                 currentBlockPlaceParentMode = BlockPlaceParentMode.Main;
                 BlockPlaceParent = GameObject.Find("Main");
                 break;
             case BlockPlaceParentMode.Main:
-                currentBlockPlaceParentMode = BlockPlaceParentMode.FrontPlane;
-                BlockPlaceParent = GameObject.Find("FrontPlane");
-                break;
-            case BlockPlaceParentMode.FrontPlane:
                 currentBlockPlaceParentMode = BlockPlaceParentMode.BackPlane;
                 BlockPlaceParent = GameObject.Find("BackPlane");
+                break;
+            case BlockPlaceParentMode.BackPlane:
+                currentBlockPlaceParentMode = BlockPlaceParentMode.FrontPlane;
+                BlockPlaceParent = GameObject.Find("FrontPlane");
                 break;
         }
         Debug.Log("Current BlockPlaceParent Mode: " + currentBlockPlaceParentMode);
@@ -454,6 +454,7 @@ public class PlayerController : MonoBehaviour
             mouseWorldPosition = GetRoundedPosition(mouseWorldPosition);
             mouseWorldPosition.z = -0.5f;
             mouseBox.transform.position = mouseWorldPosition;
+            mouseBox.name = blockToPlace.name;
 
             // Elde tutulan bloğun sprite'ını şeffaf bir şekilde göster
             if (blockToPlace != null)

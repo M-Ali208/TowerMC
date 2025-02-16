@@ -13,7 +13,7 @@ public class PlaneSwitcher : MonoBehaviour
 
     void Start()
     {
-        planeOrder = new Sprite[] { mainSprite, backplaneSprite, frontplaneSprite };
+        planeOrder = new Sprite[] { backplaneSprite, mainSprite, frontplaneSprite };
         planeImage.sprite = planeOrder[currentIndex]; 
     }
 
