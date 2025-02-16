@@ -1,20 +1,30 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
 public class BlockInfoUI : MonoBehaviour
 {
     public GameObject infoPanel;  // UI Panel
-    public TMP_Text blockNameText; // Blok Adý
-    public Image blockImage; // Blok Görseli
-    public GameObject blockToPlace; // Önizlenen blok
+    public TMP_Text blockNameText; // Blok AdÄ±
+    public Image blockImage; // Blok GÃ¶rseli
     private bool isVisible = false;
+
+    public GameObject _blockToPlace; // Ã–nizlenen blok (private deÄŸiÅŸken)
+
+    // Ã–nizleme bloÄŸu deÄŸiÅŸtirildiÄŸinde Ã§aÄŸrÄ±lacak event
+    public void SetBlockToPlace(GameObject newBlock)
+    {
+        if (newBlock == _blockToPlace) return; // AynÄ± bloksa gÃ¼ncelleme yapma
+
+        _blockToPlace = newBlock;
+        UpdateBlockInfo();
+    }
 
     void Start()
     {
         if (infoPanel == null || blockNameText == null || blockImage == null)
         {
-            Debug.LogError("UI bileþenleri eksik! Inspector'dan atamalarýný yapýn.");
+            Debug.LogError("UI bileÅŸenleri eksik! Inspector'dan atamalarÄ±nÄ± yapÄ±n.");
             return;
         }
         infoPanel.SetActive(false);
@@ -25,37 +35,32 @@ public class BlockInfoUI : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.F3))
         {
             isVisible = !isVisible;
-            infoPanel.SetActive(isVisible);
-            if (isVisible) UpdateBlockInfo();
+            infoPanel.SetActive(isVisible); 
         }
+        if (isVisible) UpdateBlockInfo();
     }
 
     private void UpdateBlockInfo()
     {
-        if (blockToPlace == null)
+        if (_blockToPlace == null)
         {
-            Debug.LogError("Hata: Önizleme bloðu atanmadý!");
+            Debug.LogError("Hata: Ã–nizleme bloÄŸu atanmadÄ±!");
             return;
         }
 
-        blockNameText.text = blockToPlace.name;
-        Debug.Log("Blok adý güncellendi: " + blockToPlace.name);
+        blockNameText.text = _blockToPlace.name;
+        Debug.Log("Blok adÄ± gÃ¼ncellendi: " + _blockToPlace.name);
 
-        SpriteRenderer spriteRenderer = blockToPlace.GetComponent<SpriteRenderer>();
+        SpriteRenderer spriteRenderer = _blockToPlace.GetComponent<SpriteRenderer>();
         if (spriteRenderer != null)
         {
             blockImage.sprite = spriteRenderer.sprite;
-
-            // UI'daki Image'in dönüþ açýsýný güncelle
-            blockImage.rectTransform.rotation = Quaternion.Euler(0, 0, blockToPlace.transform.rotation.eulerAngles.z);
-
-            Debug.Log("Blok görseli güncellendi: " + spriteRenderer.sprite.name);
+            blockImage.rectTransform.rotation = Quaternion.Euler(0, 0, _blockToPlace.transform.rotation.eulerAngles.z);
+            Debug.Log("Blok gÃ¶rseli gÃ¼ncellendi: " + spriteRenderer.sprite.name);
         }
         else
         {
-            Debug.LogError("Hata: Önizleme bloðunda SpriteRenderer bileþeni yok!");
+            Debug.LogError("Hata: Ã–nizleme bloÄŸunda SpriteRenderer bileÅŸeni yok!");
         }
     }
-
 }
-
