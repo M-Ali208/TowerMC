@@ -4,14 +4,19 @@ using UnityEngine.UI;
 
 public class BlockInfoUI : MonoBehaviour
 {
+    public PlayerController playerController;
     public GameObject infoPanel;  // UI Panel
     public TMP_Text blockNameText; // Blok Adı
     public Image blockImage; // Blok Görseli
     private bool isVisible = false;
     private bool isNameChanged = true;
     private bool isImageChanged = true;
+    private bool isMouseMoved = true;
 
     public GameObject _blockToPlace; // Önizlenen blok (private değişken)
+    public GameObject BackPlane; // Arka plan
+    public GameObject Main;
+    public GameObject FrontPlane;
 
     // Önizleme bloğu değiştirildiğinde çağrılacak event
     public void SetBlockToPlace(GameObject newBlock)

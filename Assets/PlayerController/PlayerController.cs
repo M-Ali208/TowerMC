@@ -18,7 +18,8 @@ public class PlayerController : MonoBehaviour
     private Animator anim;
     private float horizontal;
     public bool hit;
-    public bool hardnessMultiplierApplied = false;
+    private int hitLayer; 
+    private bool hardnessMultiplierApplied = false;
 
     private float currentBreakTime = 0f;
     private bool isBreaking = false;
@@ -41,6 +42,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask MouseLayer;
     [SerializeField] private LayerMask BackMainFrontLayer;
     [SerializeField] private Transform groundCheck;
+
+    [SerializeField] private GameObject backPlaneBox;
+    [SerializeField] private GameObject mainBox;
+    [SerializeField] private GameObject frontPlaneBox;
 
     [SerializeField] private GameObject mouseBox;
     [SerializeField] private GameObject OutlineBox;
@@ -99,7 +104,7 @@ public class PlayerController : MonoBehaviour
     private bool onGrounded()
     {
         Vector3 playerPosition = GetRoundedPosition(transform.position);
-        playerPosition.y -= 0.5f;
+        playerPosition.y -= 0.85f;
         RaycastHit2D hit = Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, groundLayer);
         RaycastHit2D playerhit = Physics2D.Raycast(playerPosition, Vector2.zero, groundCheckDistance, groundLayer);
 
@@ -114,7 +119,7 @@ public class PlayerController : MonoBehaviour
         return false;
     }
 
-    private void mouseBlockCheck()
+    public void mouseBlockCheck()
     {
         Vector2 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         RaycastHit2D[] hits = Physics2D.RaycastAll(mouseWorldPosition, Vector2.zero, Mathf.Infinity, BackMainFrontLayer);
@@ -122,20 +127,39 @@ public class PlayerController : MonoBehaviour
         foreach (RaycastHit2D hit in hits)
         {
             GameObject hitObject = hit.collider.gameObject;
-            Debug.Log("Hit object name: " + hitObject.name);
-            Debug.Log("Hit object transform: " + hitObject.transform.position);
-            Debug.Log("Hit object layer: " + LayerMask.LayerToName(hitObject.layer));
-
             BlockSO blockData = hitObject.GetComponent<Blocks>().blockSO;
+            
             if (blockData != null)
             {
-                // İşlemler burada yapılabilir
+                
+                hitLayer = hitObject.layer;
+                hitObject = blockData.BlockToPlace;
+                SpriteRenderer blockToBreakeRenderer = blockToPlace.GetComponent<SpriteRenderer>();
+                SpriteRenderer OutlineBoxRenderer = OutlineBox.GetComponent<SpriteRenderer>();
+                SpriteRenderer backPlaneBoxRenderer = backPlaneBox.GetComponent<SpriteRenderer>();
+                SpriteRenderer mainBoxRenderer = mainBox.GetComponent<SpriteRenderer>();
+                SpriteRenderer frontPlaneBoxRenderer = frontPlaneBox.GetComponent<SpriteRenderer>();
+
+                if (hitLayer == LayerMask.NameToLayer("BackPlane"))
+                {
+                    backPlaneBoxRenderer.sprite = blockToBreakeRenderer.sprite;
+                    UpdateLayerBox(backPlaneBox, blockData);
+                }
+                else if (hitLayer == LayerMask.NameToLayer("Main"))
+                {
+                    mainBoxRenderer.sprite = blockToBreakeRenderer.sprite;
+                    UpdateLayerBox(mainBox, blockData);
+                }
+                else if (hitLayer == LayerMask.NameToLayer("FrontPlane"))
+                {
+                    frontPlaneBoxRenderer.sprite = blockToBreakeRenderer.sprite;
+                    UpdateLayerBox(frontPlaneBox, blockData);
+                }
+                
+
             }
 
-            if (hitObject.transform.parent != null)
-            {
-                Debug.Log("Parent object name: " + hitObject.transform.parent.name);
-            }
+            
         }
     }
 
@@ -206,8 +230,7 @@ public class PlayerController : MonoBehaviour
 
             if (CanPlaceBlock(hits))
             {
-                PlaceBlock(mouseWorldPosition);
-                inventory.inventors.Find(obj => obj.blockName == blockToPlace.name).count--;
+                PlaceBlock(mouseWorldPosition);   
             }
             else
             {
@@ -261,7 +284,6 @@ public class PlayerController : MonoBehaviour
 
         if (IsPlayerInTheWay(playerPosition, blockPosition))
         {
-            inventory.inventors.Find(obj => obj.blockName == blockToPlace.name).count++;
             Debug.Log("Cannot place block: Player is in the way!");
             return;
         }
@@ -296,6 +318,7 @@ public class PlayerController : MonoBehaviour
                 }
 
                 Debug.Log("New block placed at position: " + newBlockPosition);
+                inventory.inventors.Find(obj => obj.blockName == blockToPlace.name).count--;
             }
         }
     }
@@ -392,8 +415,12 @@ public class PlayerController : MonoBehaviour
         anim.SetFloat("Horizontal", horizontal);
         anim.SetBool("hit", hit);
 
+         //mouseBlockCheck();
+
+
         if (Input.GetMouseButton(0))
         {
+            
             BlockBreake();
         }
         else
@@ -484,6 +511,26 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
+    }
+    private void UpdateLayerBox(GameObject LayerBox, BlockSO blockData)
+    {
+            LayerBox.name = blockToPlace.name;
+
+        if (blockToPlace != null)
+        {
+            SpriteRenderer layerBoxRenderer = LayerBox.GetComponent<SpriteRenderer>();
+            SpriteRenderer blockToPlaceRenderer = blockToPlace.GetComponent<SpriteRenderer>();
+
+            if (layerBoxRenderer != null && blockToPlaceRenderer != null)
+            {
+                layerBoxRenderer.sprite = blockToPlaceRenderer.sprite;
+                Debug.Log("Block Name: " + blockData.BlockName);
+                Debug.Log("Block Hardness: " + blockData.Hardness);
+                Debug.Log("Block Min Harvest Tool Tier: " + blockData.MinHarvestToolTier);
+                Debug.Log("Block Best Tool Type: " + blockData.BestToolType);
+            }
+        }
+        
     }
     private void UpdateMouseOutlineBox()
     {
