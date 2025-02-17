@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class InventoryUI : MonoBehaviour
 {
-    [SerializeField]private GameObject inventoryUI;
+    [SerializeField] private GameObject inventoryUI;
     public List<GameObject> slots;
     private Inventory inventory;
     private BlockSO BlockSO;
@@ -18,7 +18,8 @@ public class InventoryUI : MonoBehaviour
     }
 
     [System.Obsolete]
-    private void Update() {
+    private void Update()
+    {
         if (Input.GetKeyDown("e") && !inventoryUI.active)
         {
             inventoryUI.SetActive(true);
@@ -34,9 +35,9 @@ public class InventoryUI : MonoBehaviour
     {
         for (int i = 0; i < slots.Count; i++)
         {
-            
+
             GameObject prefab = Resources.Load<GameObject>($"Prefabs/Blocks/{inventory.inventors[i].blockName}");
-            
+
 
             if (prefab != null)
             {

@@ -10,10 +10,12 @@ public class RequireItems
     public int count;
 }
 
+
 [Serializable]
 public class CraftList
 {
     public string itemName;
+    public int outPutCount;
     public List<RequireItems> requireItems;
     public bool isCraftable;
 }
@@ -78,7 +80,12 @@ public class CraftManager : MonoBehaviour
                     ;
                     
                 }
-                playerInventory.AddItem(item.itemName);
+                for (int i = 0; i < item.outPutCount; i++)
+                {
+                    playerInventory.AddItem(item.itemName);
+                }
+                
+
                 Craftables();
             }
             ContinuecraftList:

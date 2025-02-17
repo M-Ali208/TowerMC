@@ -438,8 +438,8 @@ public class PlayerController : MonoBehaviour
 
                 if (currentToolTier >= (int)ToolMaterialTiers.MaterialTiers[blockData.MinHarvestToolTier])
                 {
-                    blockData.BlockName = blockData.BlockName.Replace("(Clone)", "");
-                    inventory.AddItem(blockData.BlockName);
+                    breakingBlock.name = breakingBlock.name.Replace("(Clone)", "");
+                    inventory.AddItem(breakingBlock.name);
                 }
 
                 Destroy(breakingBlock);

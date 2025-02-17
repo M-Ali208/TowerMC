@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
@@ -8,14 +9,13 @@ using UnityEngine;
 public class Inventor
 {
     public string blockName;
-    [Range(0,64)]public int count;
+    [Range(0, 64)] public int count;
     public bool isUseable = true;
 }
 
 [Serializable]
 public class PlaceBlocks
 {
-
     public GameObject blockGO;
 }
 public class Inventory : MonoBehaviour
@@ -24,16 +24,18 @@ public class Inventory : MonoBehaviour
     public List<GameObject> placeableBlocks;
     public GameObject blockHand;
     public GameObject toolHand;
+   
 
-    private void Update() {
+    private void Update()
+    {
         for (int i = 0; i < placeableBlocks.Count; i++)
         {
             if (inventors.Find(obj => obj.blockName == placeableBlocks[i].name) != null)
             {
                 blockHand = placeableBlocks[i];
             }
-        } 
-        
+        }
+
         // bunu kaldırın
         if (blockHand != null)
         {
@@ -73,12 +75,10 @@ public class Inventory : MonoBehaviour
 
                 placeableBlocks.Add(Resources.Load<GameObject>($"Prefabs/Blocks/{inventors[i].blockName}"));
 
-                //buna bakamadım
                 inventors[i].isUseable = false;
                 return;
             }
         }
-
     }
 
     public bool isHaveBlock()
@@ -98,5 +98,4 @@ public class Inventory : MonoBehaviour
         }
         return temp;
     }
-
 }
