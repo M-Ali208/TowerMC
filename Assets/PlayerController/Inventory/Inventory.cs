@@ -32,7 +32,9 @@ public class Inventory : MonoBehaviour
             {
                 blockHand = placeableBlocks[i];
             }
-        } // bunu kaldırın
+        } 
+        
+        // bunu kaldırın
         if (blockHand != null)
         {
             PlayerController.instance.blockToPlace = blockHand;
@@ -41,6 +43,7 @@ public class Inventory : MonoBehaviour
         {
             toolHand.GetComponent<ToolStats>().OnHand();
         }
+        //
         foreach (var item in inventors)
         {
             if (item.count <= 0)
@@ -68,7 +71,9 @@ public class Inventory : MonoBehaviour
                 inventors[i].blockName = item;
                 inventors[i].count++;
 
-                placeableBlocks.Add(AssetDatabase.LoadAssetAtPath<GameObject>($"Assets/Prefabs/Blocks/{inventors[i].blockName}.prefab"));
+                placeableBlocks.Add(Resources.Load<GameObject>($"Prefabs/Blocks/{inventors[i].blockName}"));
+
+                //buna bakamadım
                 inventors[i].isUseable = false;
                 return;
             }

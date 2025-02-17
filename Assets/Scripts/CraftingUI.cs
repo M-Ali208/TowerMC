@@ -10,19 +10,24 @@ public class CraftingUI : MonoBehaviour
     [SerializeField] private GameObject CraftPanel; 
     public List<Button> craftButtons;
     private CraftManager craftManager;
-
+    private BlockSO BlockSO;
     private void Start() {
        craftManager = gameObject.GetComponent<CraftManager>();
 
         for (int i = 0; i < craftButtons.Count; i++)
         {
             craftButtons[i].name = craftManager.craftLists[i].itemName;
-            GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>($"Assets/Prefabs/Blocks/{craftButtons[i].name}.prefab");
+            
+            GameObject prefab = Resources.Load<GameObject>($"Prefabs/Blocks/{craftButtons[i].name}");
             //blockso ile iliþkilendirlecek yoksa build alamýyok
             if (prefab != null)
             {
+                BlockSO blockData = prefab.GetComponent<Blocks>().blockSO;
+                prefab = blockData.BlockToPlace;
                 craftButtons[i].GetComponent<Image>().sprite = prefab.GetComponent<SpriteRenderer>().sprite;
             }
+            
+            
         }
        
     }

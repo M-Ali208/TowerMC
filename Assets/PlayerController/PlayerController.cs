@@ -108,7 +108,7 @@ public class PlayerController : MonoBehaviour
         RaycastHit2D hit = Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, groundLayer);
         RaycastHit2D playerhit = Physics2D.Raycast(playerPosition, Vector2.zero, groundCheckDistance, groundLayer);
 
-        if (hit.collider != null)
+        if (hit.collider != null || playerhit.collider != null)
         {
             BlockSO blockData = playerhit.collider.GetComponent<Blocks>()?.blockSO;
             if (blockData != null && !blockData.IsTrigger)
@@ -438,8 +438,8 @@ public class PlayerController : MonoBehaviour
 
                 if (currentToolTier >= (int)ToolMaterialTiers.MaterialTiers[blockData.MinHarvestToolTier])
                 {
-                    breakingBlock.name = breakingBlock.name.Replace("(Clone)", "");
-                    inventory.AddItem(breakingBlock.name);
+                    blockData.BlockName = blockData.BlockName.Replace("(Clone)", "");
+                    inventory.AddItem(blockData.BlockName);
                 }
 
                 Destroy(breakingBlock);

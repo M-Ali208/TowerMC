@@ -4,11 +4,13 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 public class InventoryUI : MonoBehaviour
 {
     [SerializeField]private GameObject inventoryUI;
     public List<GameObject> slots;
     private Inventory inventory;
+    private BlockSO BlockSO;
 
     void Start()
     {
@@ -32,9 +34,14 @@ public class InventoryUI : MonoBehaviour
     {
         for (int i = 0; i < slots.Count; i++)
         {
-            GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>($"Assets/Prefabs/Blocks/{inventory.inventors[i].blockName}.prefab");
+            
+            GameObject prefab = Resources.Load<GameObject>($"Prefabs/Blocks/{inventory.inventors[i].blockName}");
+            
+
             if (prefab != null)
             {
+                BlockSO blockData = prefab.GetComponent<Blocks>().blockSO;
+                prefab = blockData.BlockToPlace;
                 slots[i].GetComponent<Image>().sprite = prefab.GetComponent<SpriteRenderer>().sprite;
             }
         }
