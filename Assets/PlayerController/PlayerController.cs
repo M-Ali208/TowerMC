@@ -110,10 +110,13 @@ public class PlayerController : MonoBehaviour
 
         if (hit.collider != null || playerhit.collider != null)
         {
-            BlockSO blockData = playerhit.collider.GetComponent<Blocks>()?.blockSO;
-            if (blockData != null && !blockData.IsTrigger)
+            if (playerhit.collider != null) // Önce playerhit.collider'in null olup olmadığını kontrol edelim.
             {
-                return true;
+                BlockSO blockData = playerhit.collider.GetComponent<Blocks>()?.blockSO;
+                if (blockData != null && !blockData.IsTrigger)
+                {
+                    return true;
+                }
             }
         }
         return false;
